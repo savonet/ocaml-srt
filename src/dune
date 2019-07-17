@@ -1,0 +1,17 @@
+(library
+ (public_name srt)
+ (name srt)
+ (c_names srt_stubs)
+ (c_library_flags "-lsrt") 
+ (synopsis "Binding for the Secure, Reliable, Transport protocol library") 
+ (libraries stubs ctypes.stubs))
+
+(rule
+ (targets srt_stubs.ml)
+ (deps    (:gen ./generator/gen_stubs.exe))
+ (action  (run %{gen} ml %{targets})))
+
+(rule
+ (targets srt_stubs.c)
+ (deps    (:gen ./generator/gen_stubs.exe))
+ (action  (run %{gen} c %{targets})))

@@ -1,0 +1,13 @@
+(env
+  (dev
+     (flags (:standard -warn-error -A))))
+
+(library
+ (name stubs)
+ (public_name srt.stubs)
+ (libraries types ctypes.stubs))
+
+(rule
+ (targets srt_types.ml)
+ (deps    (:gen ../generator/gen_types_c))
+ (action  (system "%{gen} > %{targets}")))
