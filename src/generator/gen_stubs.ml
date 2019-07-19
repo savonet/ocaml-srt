@@ -15,6 +15,6 @@ let () =
          Cstubs.write_c
       | _    -> assert false
   in
-  fn format ~prefix:"ocaml_srt" (module Stubs.Def);
+  fn format ~prefix:"ocaml_srt" (module Srt_stubs.Def);
   Format.pp_print_flush format ();
   close_out oc
