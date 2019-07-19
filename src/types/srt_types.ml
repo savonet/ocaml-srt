@@ -115,16 +115,6 @@ module Def (S : Cstubs.Types.TYPE) = struct
     | `Success
   ]
 
-  module Sockaddr = struct
-    type sockaddr
-    type t = sockaddr Ctypes.structure
-    let t : t typ = structure "sockaddr"
-    let sa_family = field t "sa_family" uint64_t
-    let sa_data = field t "sa_data" (ptr char)
-
-    let () = S.seal t
-  end
-
   let socket_status : socket_status typ = 
     enum "SRT_SOCKSTATUS" [
       `Init, constant "SRTS_INIT" int64_t;

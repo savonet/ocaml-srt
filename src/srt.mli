@@ -114,12 +114,6 @@ type errno = [
 
 exception Error of errno*string
 
-module Sockaddr : sig
-  type t
-  val sa_family : (Unsigned.uint64, t) Ctypes_static.field
-  val sa_data : (char Ctypes_static.ptr, t) Ctypes_static.field
-end
-
 val startup : unit -> unit
 
 val cleanup : unit -> unit
@@ -129,5 +123,7 @@ val socket : int -> int -> int -> socket
 val create_socket : unit -> socket
 
 val getsockstate : socket -> socket_status
+
+val bind : socket -> Unix.sockaddr -> unit
 
 val setloglevel : int -> unit

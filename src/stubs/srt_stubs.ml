@@ -15,11 +15,13 @@ module Def (F : Cstubs.FOREIGN) = struct
 
   let getlasterror_str = foreign "srt_getlasterror_str" (void @-> (returning string))
 
+  let clearlasterror = foreign "srt_clearlasterror" (void @-> (returning void))
+
   let socket = foreign "srt_socket" (int @-> int @-> int @-> (returning int))
 
   let create_socket = foreign "srt_create_socket" (void @-> (returning int))
 
-  let bind = foreign "srt_bind" (int @-> ptr Sockaddr.t @-> int @-> (returning int)) 
+  let bind = foreign "srt_bind" (int @-> ptr Unix_sys_socket.Sockaddr.t @-> int @-> (returning int)) 
 
   let getsockstate = foreign "srt_getsockstate" (int @-> (returning socket_status))
 
