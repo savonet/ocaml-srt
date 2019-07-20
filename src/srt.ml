@@ -7,7 +7,7 @@ exception Invalid_argument of string
 exception Error of Srt.errno*string
 
 let check_err ret =
-  if ret < 0 then
+  if ret = -1 then
    begin
     match Srt.getlasterror (from_voidp Ctypes.int Ctypes.null) with
       | `Success -> assert false
@@ -19,33 +19,17 @@ let check_err ret =
 
 include Srt
 
-let get_constant name =
-  Int64.to_int
-    (Srt_top_level_generated_types.constant name int64_t)
-
 type 'a socket_opt = [
   | `Messageapi
   | `Transtype
 ]
 
-let stro_messageapi =
-  get_constant "SRTO_MESSAGEAPI"
-let srto_transtype =
-  get_constant "SRTO_TRANSTYPE"
-
-let int_of_socket_opt = function
-  | `Messageapi -> stro_messageapi
-  | `Transtype -> srto_transtype
-
 let messageapi = `Messageapi
 let transtype = `Transtype
 
-let srtt_live =
-  get_constant "SRTT_LIVE"
-let srtt_file =
-  get_constant "SRTT_FILE"
-let srtt_invalid =
-  get_constant "SRTT_INVALID"
+let srtt_live = Int64.to_int srtt_live
+let srtt_file = Int64.to_int srtt_file
+let srtt_invalid = Int64.to_int srtt_invalid
 
 let int_of_transtype = function
   | `Live    -> srtt_live
@@ -130,10 +114,9 @@ let recv sock buf len =
 let recvmsg = recv
 
 let getsockflag sock opt =
-  let _opt = int_of_socket_opt opt in
   let arg = allocate int 0 in
   let arglen = allocate int (sizeof int) in
-  ignore(check_err(getsockflag sock _opt (to_voidp arg) arglen));
+  ignore(check_err(getsockflag sock opt (to_voidp arg) arglen));
   let arg = !@ arg in
   match opt with
     | `Messageapi ->
@@ -142,7 +125,6 @@ let getsockflag sock opt =
           Obj.magic (transtype_of_int arg)        
 
 let setsockflag sock opt v =
-  let _opt = int_of_socket_opt opt in
   let f t v =
     to_voidp (allocate t v)
   in 
@@ -155,4 +137,4 @@ let setsockflag sock opt v =
           let transtype = int_of_transtype (Obj.magic v) in
           f int transtype, sizeof int
   in
-  ignore(check_err(setsockflag sock _opt arg arglen))
+  ignore(check_err(setsockflag sock opt arg arglen))

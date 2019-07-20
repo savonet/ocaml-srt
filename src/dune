@@ -1,7 +1,3 @@
-(env
-  (dev
-     (flags (:standard -warn-error -A))))
-
 (library
  (public_name srt)
  (name srt)
@@ -19,8 +15,3 @@
  (targets srt_generated_stubs.c)
  (deps    (:gen ./generator/gen_stubs.exe))
  (action  (run %{gen} c %{targets})))
-
-(rule
- (targets srt_top_level_generated_types.ml)
- (deps    (:gen ./generator/gen_types_c))
- (action  (system "%{gen} > %{targets}")))

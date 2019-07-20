@@ -86,11 +86,15 @@ module Def (S : Cstubs.Types.TYPE) = struct
      `Transtype, constant "SRTO_TRANSTYPE" int64_t
   ]
 
+  let srtt_live = constant "SRTT_LIVE" int64_t
+  let srtt_file = constant "SRTT_FILE" int64_t
+  let srtt_invalid = constant "SRTT_INVALID" int64_t
+
   let transtype : transtype typ =
     enum "SRT_TRANSTYPE" [
-      `Live, constant "SRTT_LIVE" int64_t;
-      `File, constant "SRTT_FILE" int64_t;
-      `Invalid, constant "SRTT_INVALID" int64_t
+      `Live, srtt_live;
+      `File, srtt_file;
+      `Invalid, srtt_invalid
   ]
 
   let errno : errno typ =
