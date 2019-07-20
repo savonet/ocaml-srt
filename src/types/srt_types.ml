@@ -16,56 +16,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
   ]
 
   type socket_opt = [
-    | `Conntimeo
-    | `Event
-    | `Fc
-    | `Inputbw
-    | `Iptos
-    | `Ipttl
-    | `Isn
-    | `Kmpreannounce
-    | `Kmrefreshrate
-    | `Kmstate
-    | `Latency
-    | `Linger
-    | `Lossmaxttl
-    | `Maxbw
     | `Messageapi
-    | `Minversion
-    | `Mss
-    | `Nakreport
-    | `Oheadbw
-    | `Passphrase
-    | `Payloadsize
-    | `Pbkeylen
-    | `Peerlatency
-    | `Peerversion
-    | `Rcvbuf
-    | `Rcvdata
-    | `Rcvkmstate
-    | `Rcvlatency
-    | `Rcvsyn
-    | `Rcvtimeo
-    | `Rendezvous
-    | `Reuseaddr
-    | `Sender
-    | `Smoother
-    | `Sndbuf
-    | `Snddata
-    | `Snddropdelay
-    | `Sndkmstate
-    | `Sndsyn
-    | `Sndtimeo
-    | `State
-    | `Streamid
-    | `Strictenc
-    | `Tlpktdrop
     | `Transtype
-    | `Tsbpddelay
-    | `Tsbpdmode
-    | `Udp
-    | `Udp
-    | `Version
   ]
 
   type transtype = [
@@ -130,56 +82,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
 
   let socket_opt : socket_opt typ =
     enum "SRT_SOCKOPT" [
-     `Mss, constant "SRTO_MSS" int64_t;
-     `Sndsyn, constant "SRTO_SNDSYN" int64_t;
-     `Rcvsyn, constant "SRTO_RCVSYN" int64_t;
-     `Isn, constant "SRTO_ISN" int64_t;
-     `Fc, constant "SRTO_FC" int64_t;
-     `Sndbuf, constant "SRTO_SNDBUF" int64_t;
-     `Rcvbuf, constant "SRTO_RCVBUF" int64_t;
-     `Linger, constant "SRTO_LINGER" int64_t;
-     `Udp, constant "SRTO_UDP_SNDBUF" int64_t;
-     `Udp, constant "SRTO_UDP_RCVBUF" int64_t;
-     `Rendezvous, constant "SRTO_RENDEZVOUS" int64_t;
-     `Sndtimeo, constant "SRTO_SNDTIMEO" int64_t;
-     `Rcvtimeo, constant "SRTO_RCVTIMEO" int64_t;
-     `Reuseaddr, constant "SRTO_REUSEADDR" int64_t;
-     `Maxbw, constant "SRTO_MAXBW" int64_t;
-     `State, constant "SRTO_STATE" int64_t;
-     `Event, constant "SRTO_EVENT" int64_t;
-     `Snddata, constant "SRTO_SNDDATA" int64_t;
-     `Rcvdata, constant "SRTO_RCVDATA" int64_t;
-     `Sender, constant "SRTO_SENDER" int64_t;
-     `Tsbpdmode, constant "SRTO_TSBPDMODE" int64_t;
-     `Latency, constant "SRTO_LATENCY" int64_t;
-     `Tsbpddelay, constant "SRTO_TSBPDDELAY" int64_t;
-     `Inputbw, constant "SRTO_INPUTBW" int64_t;
-     `Oheadbw, constant "SRTO_OHEADBW" int64_t;
-     `Passphrase, constant "SRTO_PASSPHRASE" int64_t;
-     `Pbkeylen, constant "SRTO_PBKEYLEN" int64_t;
-     `Kmstate, constant "SRTO_KMSTATE" int64_t;
-     `Ipttl, constant "SRTO_IPTTL" int64_t;
-     `Iptos, constant "SRTO_IPTOS" int64_t;
-     `Tlpktdrop, constant "SRTO_TLPKTDROP" int64_t;
-     `Snddropdelay, constant "SRTO_SNDDROPDELAY" int64_t;
-     `Nakreport, constant "SRTO_NAKREPORT" int64_t;
-     `Version, constant "SRTO_VERSION" int64_t;
-     `Peerversion, constant "SRTO_PEERVERSION" int64_t;
-     `Conntimeo, constant "SRTO_CONNTIMEO" int64_t;
-     `Sndkmstate, constant "SRTO_SNDKMSTATE" int64_t;
-     `Rcvkmstate, constant "SRTO_RCVKMSTATE" int64_t;
-     `Lossmaxttl, constant "SRTO_LOSSMAXTTL" int64_t;
-     `Rcvlatency, constant "SRTO_RCVLATENCY" int64_t;
-     `Peerlatency, constant "SRTO_PEERLATENCY" int64_t;
-     `Minversion, constant "SRTO_MINVERSION" int64_t;
-     `Streamid, constant "SRTO_STREAMID" int64_t;
-     `Smoother, constant "SRTO_SMOOTHER" int64_t;
      `Messageapi, constant "SRTO_MESSAGEAPI" int64_t;
-     `Payloadsize, constant "SRTO_PAYLOADSIZE" int64_t;
-     `Transtype, constant "SRTO_TRANSTYPE" int64_t;
-     `Kmrefreshrate, constant "SRTO_KMREFRESHRATE" int64_t;
-     `Kmpreannounce, constant "SRTO_KMPREANNOUNCE" int64_t;
-     `Strictenc, constant "SRTO_STRICTENC" int64_t
+     `Transtype, constant "SRTO_TRANSTYPE" int64_t
   ]
 
   let transtype : transtype typ =
@@ -188,10 +92,6 @@ module Def (S : Cstubs.Types.TYPE) = struct
       `File, constant "SRTT_FILE" int64_t;
       `Invalid, constant "SRTT_INVALID" int64_t
   ]
-
-  let live_def_plsize = constant "SRT_LIVE_DEF_PLSIZE" int
-  let live_max_plzise = constant "SRT_LIVE_MAX_PLSIZE" int
-  let live_def_latency_ms = constant "SRT_LIVE_DEF_LATENCY_MS" int
 
   let errno : errno typ =
     enum "SRT_ERRNO" [

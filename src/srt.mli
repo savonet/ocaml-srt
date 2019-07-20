@@ -12,64 +12,16 @@ type socket_status = [
   | `Nonexist
 ]
 
-type socket_opt = [
-  | `Conntimeo
-  | `Event
-  | `Fc
-  | `Inputbw
-  | `Iptos
-  | `Ipttl
-  | `Isn
-  | `Kmpreannounce
-  | `Kmrefreshrate
-  | `Kmstate
-  | `Latency
-  | `Linger
-  | `Lossmaxttl
-  | `Maxbw
-  | `Messageapi
-  | `Minversion
-  | `Mss
-  | `Nakreport
-  | `Oheadbw
-  | `Passphrase
-  | `Payloadsize
-  | `Pbkeylen
-  | `Peerlatency
-  | `Peerversion
-  | `Rcvbuf
-  | `Rcvdata
-  | `Rcvkmstate
-  | `Rcvlatency
-  | `Rcvsyn
-  | `Rcvtimeo
-  | `Rendezvous
-  | `Reuseaddr
-  | `Sender
-  | `Smoother
-  | `Sndbuf
-  | `Snddata
-  | `Snddropdelay
-  | `Sndkmstate
-  | `Sndsyn
-  | `Sndtimeo
-  | `State
-  | `Streamid
-  | `Strictenc
-  | `Tlpktdrop
-  | `Transtype
-  | `Tsbpddelay
-  | `Tsbpdmode
-  | `Udp
-  | `Udp
-  | `Version
-]
-
 type transtype = [
   | `Live
   | `File
   | `Invalid
 ]
+
+type 'a socket_opt
+
+val messageapi : bool socket_opt
+val transtype : transtype socket_opt
 
 type errno = [
   | `Easyncfail
@@ -118,12 +70,30 @@ val startup : unit -> unit
 
 val cleanup : unit -> unit
 
-val socket : int -> int -> int -> socket
-
-val create_socket : unit -> socket
+val socket : Unix.socket_domain -> Unix.socket_type -> int -> socket
 
 val getsockstate : socket -> socket_status
 
 val bind : socket -> Unix.sockaddr -> unit
 
+val listen : socket -> int -> unit
+
+val accept : socket -> Unix.sockaddr -> socket
+
+val connect : socket -> Unix.sockaddr -> unit
+
+val rendez_vous : socket -> Unix.sockaddr -> Unix.sockaddr -> unit
+
 val setloglevel : int -> unit
+
+val send : socket -> string -> int
+
+val recv : socket -> bytes -> int -> int
+
+val sendmsg : socket -> string -> bool -> Unsigned.UInt64.t -> int
+
+val recvmsg : socket -> bytes -> int -> int
+
+val getsockflag : socket -> 'a socket_opt -> 'a
+
+val setsockflag : socket -> 'a socket_opt -> 'a -> unit

@@ -17,11 +17,27 @@ module Def (F : Cstubs.FOREIGN) = struct
 
   let clearlasterror = foreign "srt_clearlasterror" (void @-> (returning void))
 
-  let socket = foreign "srt_socket" (int @-> int @-> int @-> (returning int))
-
-  let create_socket = foreign "srt_create_socket" (void @-> (returning int))
+  let socket = foreign "srt_socket" (Unix_sys_socket.sa_family_t @-> Unix_sys_socket.socket_type_t @-> int @-> (returning int))
 
   let bind = foreign "srt_bind" (int @-> ptr Unix_sys_socket.Sockaddr.t @-> int @-> (returning int)) 
+
+  let listen = foreign "srt_listen" (int @-> int @-> (returning int))
+
+  let accept = foreign "srt_accept" (int @-> ptr Unix_sys_socket.Sockaddr.t @-> ptr int @-> (returning int))
+
+  let connect = foreign "srt_connect" (int @-> ptr Unix_sys_socket.Sockaddr.t @-> int @-> (returning int))
+
+  let rendez_vous = foreign "srt_rendezvous" (int @-> ptr Unix_sys_socket.Sockaddr.t @-> int @-> ptr Unix_sys_socket.Sockaddr.t @-> int @-> (returning int))
+
+  let send = foreign "srt_send" (int @-> string @-> int @-> (returning int))
+
+  let recv = foreign "srt_recv" (int @-> ocaml_bytes @-> int @-> (returning int))
+
+  let sendmsg = foreign "srt_sendmsg" (int @-> string @-> int @-> bool @-> uint64_t @-> (returning int))
+
+  let setsockflag = foreign "srt_setsockflag" (int @-> int @-> ptr void @-> int @-> (returning int))
+
+  let getsockflag = foreign "srt_getsockflag" (int @-> int @-> ptr void @-> ptr int @-> (returning int))
 
   let getsockstate = foreign "srt_getsockstate" (int @-> (returning socket_status))
 
