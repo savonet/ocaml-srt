@@ -78,7 +78,7 @@ val bind : socket -> Unix.sockaddr -> unit
 
 val listen : socket -> int -> unit
 
-val accept : socket -> Unix.sockaddr -> socket
+val accept : socket -> socket*Unix.sockaddr
 
 val connect : socket -> Unix.sockaddr -> unit
 

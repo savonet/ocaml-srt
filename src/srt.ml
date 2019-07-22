@@ -68,14 +68,7 @@ let apply_sockaddr fn sockaddr =
     from_unix_sockaddr sockaddr
   in
   let len =
-    match !@ (sockaddr |-> Sockaddr.sa_family) with
-      | x when x = af_unix ->
-        sizeof SockaddrUnix.t
-      | x when x = af_inet ->
-        sizeof SockaddrInet.t 
-      | x when x = af_inet6 ->
-        sizeof SockaddrInet6.t
-      | _ -> assert false
+    sizeof sockaddr_storage_t
   in
   fn sockaddr len
 
@@ -85,11 +78,17 @@ let bind socket socketaddr =
 let connect socket socketaddr =
   ignore(check_err(apply_sockaddr (connect socket) socketaddr))
 
-let accept socket sockaddr =
-  let accept socket sockaddr socklen =
-    accept socket sockaddr (allocate int socklen)
+let accept socket =
+  let sockaddr =
+    allocate_n sockaddr_storage_t ~count:(sizeof sockaddr_storage_t)
   in
-  check_err(apply_sockaddr (accept socket) sockaddr)
+  let socklen =
+    allocate int (sizeof int)
+  in
+  let socket =
+    check_err(accept socket sockaddr socklen);
+  in
+  socket, to_unix_sockaddr sockaddr
 
 let rendez_vous socket sockaddr1 sockaddr2 =
   ignore(check_err(

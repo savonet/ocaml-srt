@@ -1,4 +1,5 @@
 open Ctypes
+open Unix_sys_socket
 
 type socket = int
 
@@ -17,17 +18,17 @@ module Def (F : Cstubs.FOREIGN) = struct
 
   let clearlasterror = foreign "srt_clearlasterror" (void @-> (returning void))
 
-  let socket = foreign "srt_socket" (Unix_sys_socket.sa_family_t @-> Unix_sys_socket.socket_type_t @-> int @-> (returning int))
+  let socket = foreign "srt_socket" (sa_family_t @-> socket_type_t @-> int @-> (returning int))
 
-  let bind = foreign "srt_bind" (int @-> ptr Unix_sys_socket.Sockaddr.t @-> int @-> (returning int)) 
+  let bind = foreign "srt_bind" (int @-> ptr sockaddr_storage_t @-> int @-> (returning int)) 
 
   let listen = foreign "srt_listen" (int @-> int @-> (returning int))
 
-  let accept = foreign "srt_accept" (int @-> ptr Unix_sys_socket.Sockaddr.t @-> ptr int @-> (returning int))
+  let accept = foreign "srt_accept" (int @-> ptr sockaddr_storage_t @-> ptr int @-> (returning int))
 
-  let connect = foreign "srt_connect" (int @-> ptr Unix_sys_socket.Sockaddr.t @-> int @-> (returning int))
+  let connect = foreign "srt_connect" (int @-> ptr sockaddr_storage_t @-> int @-> (returning int))
 
-  let rendez_vous = foreign "srt_rendezvous" (int @-> ptr Unix_sys_socket.Sockaddr.t @-> int @-> ptr Unix_sys_socket.Sockaddr.t @-> int @-> (returning int))
+  let rendez_vous = foreign "srt_rendezvous" (int @-> ptr sockaddr_storage_t @-> int @-> ptr sockaddr_storage_t @-> int @-> (returning int))
 
   let send = foreign "srt_send" (int @-> string @-> int @-> (returning int))
 
