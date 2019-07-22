@@ -6,6 +6,51 @@ module Srt = Srt_stubs.Def(Srt_generated_stubs)
 exception Invalid_argument of string
 exception Error of Srt.errno*string
 
+let string_of_errno = function
+  | `Easyncfail -> "Easyncfail"
+  | `Easyncrcv -> "Easyncrcv"
+  | `Easyncsnd -> "Easyncsnd"
+  | `Eboundsock -> "Eboundsock"
+  | `Econgest -> "Econgest"
+  | `Econnfail -> "Econnfail"
+  | `Econnlost -> "Econnlost"
+  | `Econnrej -> "Econnrej"
+  | `Econnsetup -> "Econnsetup"
+  | `Econnsock -> "Econnsock"
+  | `Eduplisten -> "Eduplisten"
+  | `Efile -> "Efile"
+  | `Einvalbufferapi -> "Einvalbufferapi"
+  | `Einvalmsgapi -> "Einvalmsgapi"
+  | `Einvop -> "Einvop"
+  | `Einvparam -> "Einvparam"
+  | `Einvpollid -> "Einvpollid"
+  | `Einvrdoff -> "Einvrdoff"
+  | `Einvsock -> "Einvsock"
+  | `Einvwroff -> "Einvwroff"
+  | `Elargemsg -> "Elargemsg"
+  | `Enobuf -> "Enobuf"
+  | `Enoconn -> "Enoconn"
+  | `Enolisten -> "Enolisten"
+  | `Enoserver -> "Enoserver"
+  | `Epeererr -> "Epeererr"
+  | `Erdperm -> "Erdperm"
+  | `Erdvnoserv -> "Erdvnoserv"
+  | `Erdvunbound -> "Erdvunbound"
+  | `Eresource -> "Eresource"
+  | `Esecfail -> "Esecfail"
+  | `Esockfail -> "Esockfail"
+  | `Ethread -> "Ethread"
+  | `Etimeout -> "Etimeout"
+  | `Eunboundsock -> "Eunboundsock"
+  | `Eunknown -> "Eunknown"
+  | `Ewrperm -> "Ewrperm"
+  | `Success -> "Success"
+
+let () =
+  Printexc.register_printer (function
+    | Error (errno,msg) -> Some (Printf.sprintf "Error(%s,%s)" (string_of_errno errno) msg)
+    | _ -> None)
+
 let check_err ret =
   if ret = -1 then
    begin
