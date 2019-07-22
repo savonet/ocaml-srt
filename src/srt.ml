@@ -83,7 +83,7 @@ let accept socket =
     allocate_n sockaddr_storage_t ~count:(sizeof sockaddr_storage_t)
   in
   let socklen =
-    allocate int (sizeof int)
+    allocate int (sizeof sockaddr_storage_t)
   in
   let socket =
     check_err(accept socket sockaddr socklen);
