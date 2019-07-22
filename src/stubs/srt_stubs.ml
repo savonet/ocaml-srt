@@ -32,7 +32,7 @@ module Def (F : Cstubs.FOREIGN) = struct
 
   let send = foreign "srt_send" (int @-> string @-> int @-> (returning int))
 
-  let recv = foreign "srt_recv" (int @-> ocaml_bytes @-> int @-> (returning int))
+  let recv = foreign "srt_recv" (int @-> ptr char @-> int @-> (returning int))
 
   let sendmsg = foreign "srt_sendmsg" (int @-> string @-> int @-> bool @-> uint64_t @-> (returning int))
 

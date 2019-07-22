@@ -86,11 +86,11 @@ val rendez_vous : socket -> Unix.sockaddr -> Unix.sockaddr -> unit
 
 val setloglevel : int -> unit
 
-val send : socket -> string -> int
+val send : socket -> bytes -> int
 
 val recv : socket -> bytes -> int -> int
 
-val sendmsg : socket -> string -> bool -> Unsigned.UInt64.t -> int
+val sendmsg : socket -> bytes -> bool -> Unsigned.UInt64.t -> int
 
 val recvmsg : socket -> bytes -> int -> int
 

@@ -145,15 +145,24 @@ let listen sock backlog =
   ignore(check_err (listen sock backlog))
 
 let send sock msg =
-  check_err(send sock msg (String.length msg))
+  check_err(send sock (Bytes.unsafe_to_string msg) (Bytes.length msg))
 
 let sendmsg sock msg b v =
-  check_err(sendmsg sock msg (String.length msg) b v)
+  check_err(sendmsg sock (Bytes.unsafe_to_string msg) (Bytes.length msg) b v)
 
 let recv sock buf len =
   if Bytes.length buf < len then
     raise (Invalid_argument "buffer too short!");
-  check_err(recv sock (ocaml_bytes_start buf) len)
+  let ptr =
+    allocate_n char ~count:len
+  in
+  let length =
+    check_err(recv sock ptr len)
+  in
+  Bytes.blit_string
+    (string_from_ptr ptr ~length) 0
+    buf 0 length;
+  length
 
 let recvmsg = recv
 
