@@ -113,7 +113,7 @@ let apply_sockaddr fn sockaddr =
     from_unix_sockaddr sockaddr
   in
   let len =
-    sizeof sockaddr_storage_t
+    sizeof sockaddr_in_t
   in
   fn sockaddr len
 
