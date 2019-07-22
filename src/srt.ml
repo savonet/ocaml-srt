@@ -138,3 +138,6 @@ let setsockflag sock opt v =
           f int transtype, sizeof int
   in
   ignore(check_err(setsockflag sock opt arg arglen))
+
+let close s =
+  ignore(check_err(close s))

@@ -8,4 +8,5 @@ let () =
   Printf.printf "Setting transtype to file..\n%!";
   setsockflag s transtype `File;
   Printf.printf "Messageapi: %b\n%!" (getsockflag s messageapi);
+  close s;
   cleanup()

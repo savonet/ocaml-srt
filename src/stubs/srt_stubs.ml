@@ -42,4 +42,6 @@ module Def (F : Cstubs.FOREIGN) = struct
   let getsockstate = foreign "srt_getsockstate" (int @-> (returning socket_status))
 
   let setloglevel = foreign "srt_setloglevel" (int @-> (returning void))
+
+  let close = foreign "srt_close" (int @-> (returning int))
 end

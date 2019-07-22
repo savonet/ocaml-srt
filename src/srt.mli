@@ -97,3 +97,5 @@ val recvmsg : socket -> bytes -> int -> int
 val getsockflag : socket -> 'a socket_opt -> 'a
 
 val setsockflag : socket -> 'a socket_opt -> 'a -> unit
+
+val close : socket -> unit
