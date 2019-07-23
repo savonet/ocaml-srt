@@ -67,10 +67,14 @@ include Srt
 type 'a socket_opt = [
   | `Messageapi
   | `Transtype
+  | `Rcvsyn
+  | `Sndsyn
 ]
 
 let messageapi = `Messageapi
 let transtype = `Transtype
+let rcvsyn = `Rcvsyn
+let sndsyn = `Sndsyn
 
 let srtt_live = Int64.to_int srtt_live
 let srtt_file = Int64.to_int srtt_file
@@ -172,6 +176,8 @@ let getsockflag sock opt =
   ignore(check_err(getsockflag sock opt (to_voidp arg) arglen));
   let arg = !@ arg in
   match opt with
+    | `Rcvsyn
+    | `Sndsyn
     | `Messageapi ->
           Obj.magic (arg <> 0)
     | `Transtype ->
@@ -183,6 +189,8 @@ let setsockflag sock opt v =
   in 
   let arg, arglen =
     match opt with
+      | `Rcvsyn
+      | `Sndsyn
       | `Messageapi ->
           let v = if (Obj.magic v) then 1 else 0 in
           f int v, sizeof int

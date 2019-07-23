@@ -22,6 +22,8 @@ type 'a socket_opt
 
 val messageapi : bool socket_opt
 val transtype : transtype socket_opt
+val rcvsyn : bool socket_opt
+val sndsyn : bool socket_opt
 
 type errno = [
   | `Easyncfail
