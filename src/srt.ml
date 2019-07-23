@@ -66,15 +66,19 @@ include Srt
 
 type 'a socket_opt = [
   | `Messageapi
+  | `Payloadsize
   | `Transtype
   | `Rcvsyn
   | `Sndsyn
+  | `Reuseaddr
 ]
 
 let messageapi = `Messageapi
+let payloadsize = `Payloadsize
 let transtype = `Transtype
 let rcvsyn = `Rcvsyn
 let sndsyn = `Sndsyn
+let reuseaddr = `Reuseaddr
 
 let srtt_live = Int64.to_int srtt_live
 let srtt_file = Int64.to_int srtt_file
@@ -111,6 +115,8 @@ let socket _of _type _protocol =
         sock_seqpacket
   in
   check_err (socket _of _type _protocol)
+
+open Ctypes
 
 let apply_sockaddr fn sockaddr =
   let sockaddr =
@@ -178,8 +184,11 @@ let getsockflag sock opt =
   match opt with
     | `Rcvsyn
     | `Sndsyn
+    | `Reuseaddr
     | `Messageapi ->
           Obj.magic (arg <> 0)
+    | `Payloadsize ->
+          Obj.magic arg
     | `Transtype ->
           Obj.magic (transtype_of_int arg)        
 
@@ -191,8 +200,12 @@ let setsockflag sock opt v =
     match opt with
       | `Rcvsyn
       | `Sndsyn
+      | `Reuseaddr
       | `Messageapi ->
           let v = if (Obj.magic v) then 1 else 0 in
+          f int v, sizeof int
+      | `Payloadsize ->
+          let v = Obj.magic v in
           f int v, sizeof int
       | `Transtype ->
           let transtype = int_of_transtype (Obj.magic v) in

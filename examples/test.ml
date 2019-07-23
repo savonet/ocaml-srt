@@ -12,5 +12,7 @@ let () =
   Printf.printf "Rcvsyn: %b\n%!" (getsockflag s rcvsyn);
   setsockflag s rcvsyn false;
   Printf.printf "Rcvsyn: %b\n%!" (getsockflag s rcvsyn);
+  setsockflag s payloadsize 1234;
+  Printf.printf "Payloadsize: %d\n%!" (getsockflag s payloadsize);
   close s;
   cleanup()

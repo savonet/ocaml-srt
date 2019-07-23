@@ -17,9 +17,11 @@ module Def (S : Cstubs.Types.TYPE) = struct
 
   type socket_opt = [
     | `Messageapi
+    | `Payloadsize
     | `Transtype
     | `Rcvsyn
     | `Sndsyn
+    | `Reuseaddr
   ]
 
   type transtype = [
@@ -85,9 +87,11 @@ module Def (S : Cstubs.Types.TYPE) = struct
   let socket_opt : socket_opt typ =
     enum "SRT_SOCKOPT" [
      `Messageapi, constant "SRTO_MESSAGEAPI" int64_t;
+     `Payloadsize, constant "SRTO_PAYLOADSIZE" int64_t;
      `Transtype, constant "SRTO_TRANSTYPE" int64_t;
      `Rcvsyn, constant "SRTO_RCVSYN" int64_t;
-     `Sndsyn, constant "SRTO_SNDSYN" int64_t
+     `Sndsyn, constant "SRTO_SNDSYN" int64_t;
+     `Reuseaddr, constant "SRTO_REUSEADDR" int64_t
   ]
 
   let srtt_live = constant "SRTT_LIVE" int64_t

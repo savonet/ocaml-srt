@@ -21,9 +21,11 @@ type transtype = [
 type 'a socket_opt
 
 val messageapi : bool socket_opt
+val payloadsize : int socket_opt
 val transtype : transtype socket_opt
 val rcvsyn : bool socket_opt
 val sndsyn : bool socket_opt
+val reuseaddr : bool socket_opt
 
 type errno = [
   | `Easyncfail
@@ -71,6 +73,8 @@ exception Error of errno*string
 val startup : unit -> unit
 
 val cleanup : unit -> unit
+
+val create_socket : unit -> socket
 
 val socket : Unix.socket_domain -> Unix.socket_type -> int -> socket
 

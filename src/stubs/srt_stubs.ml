@@ -18,6 +18,8 @@ module Def (F : Cstubs.FOREIGN) = struct
 
   let clearlasterror = foreign "srt_clearlasterror" (void @-> (returning void))
 
+  let create_socket = foreign "srt_create_socket" (void @-> (returning int))
+
   let socket = foreign "srt_socket" (sa_family_t @-> socket_type_t @-> int @-> (returning int))
 
   let bind = foreign "srt_bind" (int @-> ptr sockaddr_storage_t @-> int @-> (returning int)) 
