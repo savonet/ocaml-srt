@@ -57,8 +57,9 @@ let check_err ret =
     match Srt.getlasterror (from_voidp Ctypes.int Ctypes.null) with
       | `Success -> assert false
       | errno -> 
+           let msg = Srt.getlasterror_str() in
            Srt.clearlasterror ();
-           raise (Error (errno, Srt.getlasterror_str()))
+           raise (Error (errno, msg))
    end;
   ret
 
