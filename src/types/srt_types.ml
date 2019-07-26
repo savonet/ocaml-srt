@@ -22,6 +22,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
     | `Rcvsyn
     | `Sndsyn
     | `Reuseaddr
+    | `Rcvbuf
+    | `Sndbuf
     | `Udp_rcvbuf
     | `Udp_sndbuf
   ]
@@ -94,6 +96,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
      `Rcvsyn, constant "SRTO_RCVSYN" int64_t;
      `Sndsyn, constant "SRTO_SNDSYN" int64_t;
      `Reuseaddr, constant "SRTO_REUSEADDR" int64_t;
+     `Rcvbuf, constant "SRTO_RCVBUF" int64_t;
+     `Sndbuf, constant "SRTO_SNDBUF" int64_t;
      `Udp_rcvbuf, constant "SRTO_UDP_RCVBUF" int64_t;
      `Udp_sndbuf, constant "SRTO_UDP_SNDBUF" int64_t
   ]
