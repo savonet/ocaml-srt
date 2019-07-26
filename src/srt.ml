@@ -71,6 +71,8 @@ type 'a socket_opt = [
   | `Rcvsyn
   | `Sndsyn
   | `Reuseaddr
+  | `Udp_rcvbuf
+  | `Udp_sndbuf
 ]
 
 let messageapi = `Messageapi
@@ -79,6 +81,8 @@ let transtype = `Transtype
 let rcvsyn = `Rcvsyn
 let sndsyn = `Sndsyn
 let reuseaddr = `Reuseaddr
+let udp_rcvbuf = `Udp_rcvbuf
+let udp_sndbuf = `Udp_sndbuf
 
 let srtt_live = Int64.to_int srtt_live
 let srtt_file = Int64.to_int srtt_file
@@ -187,6 +191,8 @@ let getsockflag sock opt =
     | `Reuseaddr
     | `Messageapi ->
           Obj.magic (arg <> 0)
+    | `Udp_rcvbuf
+    | `Udp_sndbuf
     | `Payloadsize ->
           Obj.magic arg
     | `Transtype ->
@@ -204,6 +210,8 @@ let setsockflag sock opt v =
       | `Messageapi ->
           let v = if (Obj.magic v) then 1 else 0 in
           f int v, sizeof int
+      | `Udp_rcvbuf
+      | `Udp_sndbuf
       | `Payloadsize ->
           let v = Obj.magic v in
           f int v, sizeof int

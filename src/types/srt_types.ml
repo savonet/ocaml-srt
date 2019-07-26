@@ -22,6 +22,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
     | `Rcvsyn
     | `Sndsyn
     | `Reuseaddr
+    | `Udp_rcvbuf
+    | `Udp_sndbuf
   ]
 
   type transtype = [
@@ -91,7 +93,9 @@ module Def (S : Cstubs.Types.TYPE) = struct
      `Transtype, constant "SRTO_TRANSTYPE" int64_t;
      `Rcvsyn, constant "SRTO_RCVSYN" int64_t;
      `Sndsyn, constant "SRTO_SNDSYN" int64_t;
-     `Reuseaddr, constant "SRTO_REUSEADDR" int64_t
+     `Reuseaddr, constant "SRTO_REUSEADDR" int64_t;
+     `Udp_rcvbuf, constant "SRTO_UDP_RCVBUF" int64_t;
+     `Udp_sndbuf, constant "SRTO_UDP_SNDBUF" int64_t
   ]
 
   let srtt_live = constant "SRTT_LIVE" int64_t

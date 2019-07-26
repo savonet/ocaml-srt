@@ -26,6 +26,8 @@ val transtype : transtype socket_opt
 val rcvsyn : bool socket_opt
 val sndsyn : bool socket_opt
 val reuseaddr : bool socket_opt
+val udp_rcvbuf : int socket_opt
+val udp_sndbuf : int socket_opt
 
 type errno = [
   | `Easyncfail
