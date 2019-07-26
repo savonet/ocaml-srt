@@ -168,21 +168,22 @@ let send sock msg =
 let sendmsg sock msg b v =
   check_err(sendmsg sock (Bytes.unsafe_to_string msg) (Bytes.length msg) b v)
 
-let recv sock buf len =
+let mk_recv fn sock buf len =
   if Bytes.length buf < len then
     raise (Invalid_argument "buffer too short!");
   let ptr =
     allocate_n char ~count:len
   in
   let length =
-    check_err(recv sock ptr len)
+    check_err(fn sock ptr len)
   in
   Bytes.blit_string
     (string_from_ptr ptr ~length) 0
     buf 0 length;
   length
 
-let recvmsg = recv
+let recv = mk_recv recv
+let recvmsg = mk_recv recvmsg
 
 let getsockflag sock opt =
   let arg = allocate int 0 in
