@@ -100,7 +100,7 @@ val send : socket -> bytes -> int
 
 val recv : socket -> bytes -> int -> int
 
-val sendmsg : socket -> bytes -> bool -> Unsigned.UInt64.t -> int
+val sendmsg : socket -> bytes -> int -> bool -> int
 
 val recvmsg : socket -> bytes -> int -> int
 

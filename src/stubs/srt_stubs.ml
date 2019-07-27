@@ -38,7 +38,7 @@ module Def (F : Cstubs.FOREIGN) = struct
 
   let recvmsg = foreign "srt_recvmsg" (int @-> ptr char @-> int @-> (returning int))
 
-  let sendmsg = foreign "srt_sendmsg" (int @-> string @-> int @-> bool @-> uint64_t @-> (returning int))
+  let sendmsg = foreign "srt_sendmsg" (int @-> string @-> int @-> int @-> bool @-> (returning int))
 
   let setsockflag = foreign "srt_setsockflag" (int @-> socket_opt @-> ptr void @-> int @-> (returning int))
 
