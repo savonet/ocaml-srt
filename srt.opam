@@ -17,5 +17,13 @@ depends: [
   "ocaml"
   "dune"
   "ctypes"
+  "sys-socket"
+]
+depexts: [
+  ["srt-devel"] {os-distribution = "centos"}
+  ["srt-devel"] {os-distribution = "fedora"}
+  ["srt-devel"] {os-family = "suse"}
+  ["libsrt-dev"] {os-family = "debian"}
+  ["srt"] {os = "macos" & os-distribution = "homebrew"}
 ]
 build: ["dune" "build" "-p" name "-j" jobs]

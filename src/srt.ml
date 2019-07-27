@@ -1,10 +1,17 @@
 open Ctypes
-open Unix_sys_socket
+open Sys_socket
 
 module Srt = Srt_stubs.Def(Srt_generated_stubs)
 
+open Srt
+
 exception Invalid_argument of string
-exception Error of Srt.errno*string
+exception Error of errno*string
+
+type errno = Srt.errno
+type transtype = Srt.transtype
+type socket_status = Srt.socket_status
+type socket = Srt.socket
 
 let string_of_errno = function
   | `Easyncfail -> "Easyncfail"
@@ -54,16 +61,14 @@ let () =
 let check_err ret =
   if ret = -1 then
    begin
-    match Srt.getlasterror (from_voidp Ctypes.int Ctypes.null) with
+    match getlasterror (from_voidp Ctypes.int Ctypes.null) with
       | `Success -> assert false
       | errno -> 
-           let msg = Srt.getlasterror_str() in
-           Srt.clearlasterror ();
+           let msg = getlasterror_str() in
+           clearlasterror ();
            raise (Error (errno, msg))
    end;
   ret
-
-include Srt
 
 type 'a socket_opt = [
   | `Messageapi
@@ -144,10 +149,10 @@ let connect socket socketaddr =
 
 let accept socket =
   let sockaddr =
-    allocate_n sockaddr_storage_t ~count:(sizeof sockaddr_storage_t)
+    allocate_n sockaddr_t ~count:(sizeof sockaddr_storage_t)
   in
   let socklen =
-    allocate int (sizeof sockaddr_storage_t)
+    allocate int (sizeof sockaddr_t)
   in
   let socket =
     check_err(accept socket sockaddr socklen);
@@ -189,26 +194,22 @@ let recvmsg = mk_recv recvmsg
 let getsockflag sock opt =
   let arg = allocate int 0 in
   let arglen = allocate int (sizeof int) in
-  let process opt arg fn =
-    ignore(check_err(getsockflag sock opt (to_voidp arg) arglen));
-    let arg = !@ arg in
-    fn arg
-  in
-  fun arg ->
-    match opt with
-      | `Rcvsyn
-      | `Sndsyn
-      | `Reuseaddr
-      | `Messageapi ->
-            process opt arg (fun arg -> (arg <> 0))
-      | `Rcvbuf
-      | `Sndbuf
-      | `Udp_rcvbuf
-      | `Udp_sndbuf
-      | `Payloadsize ->
-            process opt arg (fun arg -> arg)
-      | `Transtype ->
-            process opt arg transtype_of_int
+  ignore(check_err(getsockflag sock opt (to_voidp arg) arglen));
+  let arg = !@ arg in
+  match opt with
+    | `Rcvsyn
+    | `Sndsyn
+    | `Reuseaddr
+    | `Messageapi ->
+          Obj.magic (arg <> 0)
+    | `Rcvbuf
+    | `Sndbuf
+    | `Udp_rcvbuf
+    | `Udp_sndbuf
+    | `Payloadsize ->
+          Obj.magic arg
+    | `Transtype ->
+          Obj.magic (transtype_of_int arg)
 
 let setsockflag sock opt v =
   let f t v =
@@ -237,3 +238,9 @@ let setsockflag sock opt v =
 
 let close s =
   ignore(check_err(close s))
+
+let setloglevel = setloglevel
+let getsockstate = getsockstate
+let create_socket = create_socket
+let cleanup = cleanup
+let startup = startup

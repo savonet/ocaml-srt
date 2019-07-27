@@ -5,7 +5,7 @@
 (library
  (name srt_stubs)
  (public_name srt.stubs)
- (libraries srt.types ctypes.stubs unix-sys-socket))
+ (libraries srt.types ctypes.stubs sys-socket))
 
 (rule
  (targets srt_generated_types.ml)
