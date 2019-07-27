@@ -189,22 +189,26 @@ let recvmsg = mk_recv recvmsg
 let getsockflag sock opt =
   let arg = allocate int 0 in
   let arglen = allocate int (sizeof int) in
-  ignore(check_err(getsockflag sock opt (to_voidp arg) arglen));
-  let arg = !@ arg in
-  match opt with
-    | `Rcvsyn
-    | `Sndsyn
-    | `Reuseaddr
-    | `Messageapi ->
-          Obj.magic (arg <> 0)
-    | `Rcvbuf
-    | `Sndbuf
-    | `Udp_rcvbuf
-    | `Udp_sndbuf
-    | `Payloadsize ->
-          Obj.magic arg
-    | `Transtype ->
-          Obj.magic (transtype_of_int arg)        
+  let process opt arg fn =
+    ignore(check_err(getsockflag sock opt (to_voidp arg) arglen));
+    let arg = !@ arg in
+    fn arg
+  in
+  fun arg ->
+    match opt with
+      | `Rcvsyn
+      | `Sndsyn
+      | `Reuseaddr
+      | `Messageapi ->
+            process opt arg (fun arg -> (arg <> 0))
+      | `Rcvbuf
+      | `Sndbuf
+      | `Udp_rcvbuf
+      | `Udp_sndbuf
+      | `Payloadsize ->
+            process opt arg (fun arg -> arg)
+      | `Transtype ->
+            process opt arg transtype_of_int
 
 let setsockflag sock opt v =
   let f t v =
