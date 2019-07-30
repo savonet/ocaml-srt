@@ -34,6 +34,12 @@ module Def (S : Cstubs.Types.TYPE) = struct
     | `Invalid
   ]
 
+  type poll_flag = [
+    | `Read
+    | `Write
+    | `Error
+  ]
+
   type errno = [
     | `Easyncfail
     | `Easyncrcv
@@ -154,4 +160,15 @@ module Def (S : Cstubs.Types.TYPE) = struct
      `Econgest, constant "SRT_ECONGEST" int64_t;
      `Epeererr, constant "SRT_EPEERERR" int64_t
   ]
+
+  let poll_flag : poll_flag typ =
+    enum "SRT_EPOLL_OPT" [
+      `Read, constant "SRT_EPOLL_IN" int64_t;
+      `Write, constant "SRT_EPOLL_OUT" int64_t;
+      `Error, constant "SRT_EPOLL_ERR" int64_t
+    ]
+
+  let poll_flag = typedef poll_flag "const int"
+
+  let const_string = typedef string "const char*"
 end

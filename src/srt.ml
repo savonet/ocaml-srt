@@ -244,3 +244,47 @@ let getsockstate = getsockstate
 let create_socket = create_socket
 let cleanup = cleanup
 let startup = startup
+
+type poll = int
+type poll_flag = Srt.poll_flag
+
+let epoll_create = epoll_create
+let epoll_add_usock eid s e =
+  let e = allocate Srt.poll_flag e in
+  ignore(check_err(epoll_add_usock eid s e))
+let epoll_remove_usock eid s =
+  ignore(check_err(epoll_remove_usock eid s))
+let epoll_update_usock eid s e =
+  let e = allocate Srt.poll_flag e in
+  ignore(check_err(epoll_update_usock eid s e))
+let epoll_release eid =
+  ignore(check_err(epoll_release eid))
+
+let epoll_wait eid ~max_read ~max_write ~timeout =
+  let timeout = Int64.of_int timeout in
+  let read_len =
+    allocate int max_read
+  in
+  let read =
+    CArray.make int max_read
+  in
+  let write_len =
+    allocate int max_write
+  in
+  let write =
+    CArray.make int max_write
+  in
+  ignore(check_err(
+    epoll_wait eid
+      (CArray.start read) read_len
+      (CArray.start write) write_len
+      timeout null null null null));
+  let read =
+    CArray.to_list
+      (CArray.sub read ~pos:0 ~length:(!@read_len))
+  in
+  let write =
+    CArray.to_list
+      (CArray.sub write ~pos:0 ~length:(!@write_len))
+  in
+  read, write

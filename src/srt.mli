@@ -109,3 +109,23 @@ val getsockflag : socket -> 'a socket_opt -> 'a
 val setsockflag : socket -> 'a socket_opt -> 'a -> unit
 
 val close : socket -> unit
+
+type poll
+
+type poll_flag = [
+  | `Read
+  | `Write
+  | `Error
+]
+
+val epoll_create : unit -> poll
+
+val epoll_add_usock : poll -> socket -> poll_flag -> unit
+
+val epoll_remove_usock : poll -> socket -> unit
+
+val epoll_update_usock : poll -> socket -> poll_flag -> unit
+
+val epoll_wait : poll -> max_read:int -> max_write:int -> timeout:int -> (socket list * socket list)
+
+val epoll_release : poll -> unit  
