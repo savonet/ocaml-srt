@@ -4,7 +4,7 @@
  (c_names srt_generated_stubs)
  (c_library_flags "-lsrt") 
  (synopsis "Binding for the Secure, Reliable, Transport protocol library") 
- (libraries srt.stubs ctypes.stubs))
+ (libraries threads srt.stubs ctypes.stubs))
 
 (rule
  (targets srt_generated_stubs.ml)

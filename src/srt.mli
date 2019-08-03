@@ -94,8 +94,6 @@ val connect : socket -> Unix.sockaddr -> unit
 
 val rendez_vous : socket -> Unix.sockaddr -> Unix.sockaddr -> unit
 
-val setloglevel : int -> unit
-
 val send : socket -> bytes -> int
 
 val recv : socket -> bytes -> int -> int
@@ -110,22 +108,40 @@ val setsockflag : socket -> 'a socket_opt -> 'a -> unit
 
 val close : socket -> unit
 
-type poll
+module Log : sig
+  type msg = {
+    level:   int;
+    file:    string;
+    line:    int;
+    area:    string;
+    message: string
+  }
 
-type poll_flag = [
-  | `Read
-  | `Write
-  | `Error
-]
+  val setloglevel : int -> unit
 
-val epoll_create : unit -> poll
+  val set_handler : (msg -> unit) -> unit
 
-val epoll_add_usock : poll -> socket -> poll_flag -> unit
+  val clear_handler : unit -> unit
+end
 
-val epoll_remove_usock : poll -> socket -> unit
+module Poll : sig
+  type t
 
-val epoll_update_usock : poll -> socket -> poll_flag -> unit
+  type flag = [
+    | `Read
+    | `Write
+    | `Error
+  ]
 
-val epoll_wait : poll -> max_read:int -> max_write:int -> timeout:int -> (socket list * socket list)
+  val create : unit -> t
 
-val epoll_release : poll -> unit  
+  val add_usock : t -> socket -> flag -> unit
+
+  val remove_usock : t -> socket -> unit
+
+  val update_usock : t -> socket -> flag -> unit
+
+  val wait : t -> max_read:int -> max_write:int -> timeout:int -> (socket list * socket list)
+
+  val release : t -> unit  
+end
