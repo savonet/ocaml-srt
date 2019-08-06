@@ -117,7 +117,15 @@ module Log : sig
     message: string
   }
 
-  val setloglevel : int -> unit
+  type level = [
+    | `Critical
+    | `Error
+    | `Warning
+    | `Notice
+    | `Debug
+  ]
+
+  val setloglevel : level -> unit
 
   val set_handler : (msg -> unit) -> unit
 

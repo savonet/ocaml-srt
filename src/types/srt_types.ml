@@ -119,6 +119,12 @@ module Def (S : Cstubs.Types.TYPE) = struct
       `Invalid, srtt_invalid
   ]
 
+  let log_crit = constant "LOG_CRIT" int
+  let log_err = constant "LOG_ERR" int
+  let log_warning = constant "LOG_WARNING" int 
+  let log_notice = constant "LOG_NOTICE" int
+  let log_debug = constant "LOG_DEBUG" int
+
   let errno : errno typ =
     enum "SRT_ERRNO" [
      `Eunknown, constant "SRT_EUNKNOWN" int64_t;

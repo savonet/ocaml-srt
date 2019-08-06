@@ -303,7 +303,22 @@ module Log = struct
     message: string
   }
 
-  let setloglevel = setloglevel
+  type level = [
+    | `Critical
+    | `Error
+    | `Warning
+    | `Notice
+    | `Debug
+  ]
+
+  let int_of_level = function
+    | `Critical -> log_crit
+    | `Error -> log_err
+    | `Warning -> log_warning
+    | `Notice -> log_notice
+    | `Debug -> log_debug
+
+  let setloglevel lvl = setloglevel (int_of_level lvl)
 
   external ocaml_srt_register_log_handler : (int -> string -> int -> string -> string -> unit) -> unit = "ocaml_srt_register_log_handler"
 
