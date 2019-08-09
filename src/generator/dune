@@ -1,7 +1,7 @@
 (executable
  (name gen_stubs)
  (modules gen_stubs)
- (libraries srt.stubs ctypes.stubs))
+ (libraries srt.stubs srt.stubs.locked ctypes.stubs))
 
 (executable
  (name gen_types_c)

@@ -5,6 +5,10 @@ module Srt = Srt_stubs.Def(Srt_generated_stubs)
 
 open Srt
 
+module Srt_locked = Srt_stubs_locked.Def(Srt_generated_stubs_locked)
+
+open Srt_locked
+
 exception Invalid_argument of string
 exception Error of errno*string
 
@@ -183,9 +187,7 @@ let mk_recv fn sock buf len =
   let length =
     check_err(fn sock ptr len)
   in
-  Bytes.blit_string
-    (string_from_ptr ptr ~length) 0
-    buf 0 length;
+  memcpy (ocaml_bytes_start buf) ptr len;
   length
 
 let recv = mk_recv recv
