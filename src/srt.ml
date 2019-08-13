@@ -187,7 +187,7 @@ let mk_recv fn sock buf len =
   let length =
     check_err(fn sock ptr len)
   in
-  memcpy (ocaml_bytes_start buf) ptr len;
+  memcpy (ocaml_bytes_start buf) ptr length;
   length
 
 let recv = mk_recv recv
