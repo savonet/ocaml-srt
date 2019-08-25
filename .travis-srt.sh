@@ -11,6 +11,7 @@ sudo make install
 
 # Fake Debian installation
 
+sudo apt-get install equivs
 equivs-control control
 sed -i 's/^Package:.*$/Package: libsrt-dev/' control
 equivs-build control
