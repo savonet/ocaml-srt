@@ -1,5 +1,6 @@
 # Download and build srt
 
+sudo apt-get update -q
 sudo apt-get install tclsh pkg-config libssl-dev build-essential
 
 git clone https://github.com/Haivision/srt.git
