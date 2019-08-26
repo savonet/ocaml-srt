@@ -26,4 +26,7 @@ depexts: [
   ["libsrt-dev"] {os-family = "debian"}
   ["srt"] {os = "macos" & os-distribution = "homebrew"}
 ]
-build: ["dune" "build" "-p" name "-j" jobs]
+build: [
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
