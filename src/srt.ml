@@ -85,6 +85,7 @@ type 'a socket_opt = [
   | `Sndbuf
   | `Udp_rcvbuf
   | `Udp_sndbuf
+  | `Enforced_encryption
 ]
 
 let messageapi = `Messageapi
@@ -97,6 +98,7 @@ let rcvbuf = `Rcvbuf
 let sndbuf = `Sndbuf
 let udp_rcvbuf = `Udp_rcvbuf
 let udp_sndbuf = `Udp_sndbuf
+let enforced_encryption = `Enforced_encryption
 
 let srtt_live = Int64.to_int srtt_live
 let srtt_file = Int64.to_int srtt_file
@@ -199,6 +201,7 @@ let getsockflag sock opt =
   ignore(check_err(getsockflag sock opt (to_voidp arg) arglen));
   let arg = !@ arg in
   match opt with
+    | `Enforced_encryption
     | `Rcvsyn
     | `Sndsyn
     | `Reuseaddr
@@ -219,6 +222,7 @@ let setsockflag sock opt v =
   in 
   let arg, arglen =
     match opt with
+      | `Enforced_encryption
       | `Rcvsyn
       | `Sndsyn
       | `Reuseaddr

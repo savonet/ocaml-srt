@@ -26,6 +26,7 @@ module Def (S : Cstubs.Types.TYPE) = struct
     | `Sndbuf
     | `Udp_rcvbuf
     | `Udp_sndbuf
+    | `Enforced_encryption
   ]
 
   type transtype = [
@@ -105,7 +106,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
      `Rcvbuf, constant "SRTO_RCVBUF" int64_t;
      `Sndbuf, constant "SRTO_SNDBUF" int64_t;
      `Udp_rcvbuf, constant "SRTO_UDP_RCVBUF" int64_t;
-     `Udp_sndbuf, constant "SRTO_UDP_SNDBUF" int64_t
+     `Udp_sndbuf, constant "SRTO_UDP_SNDBUF" int64_t;
+     `Enforced_encryption, constant "SRTO_ENFORCEDENCRYPTION" int64_t
   ]
 
   let srtt_live = constant "SRTT_LIVE" int64_t

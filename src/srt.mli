@@ -52,6 +52,7 @@ val rcvbuf : int socket_opt
 val sndbuf : int socket_opt
 val udp_rcvbuf : int socket_opt
 val udp_sndbuf : int socket_opt
+val enforced_encryption : bool socket_opt
 
 type errno = [
   | `Easyncfail
