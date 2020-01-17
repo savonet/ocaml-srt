@@ -1,13 +1,16 @@
 (env
-  (dev
-     (flags (:standard -warn-error -A))))
+ (dev
+  (flags
+   (:standard -warn-error -A))))
 
 (library
  (name srt_stubs)
  (public_name srt.stubs)
- (libraries srt.types ctypes.stubs sys-socket))
+ (libraries srt.types ctypes.stubs posix-socket))
 
 (rule
  (targets srt_generated_types.ml)
- (deps    (:gen ../generator/gen_types_c))
- (action  (system "%{gen} > %{targets}")))
+ (deps
+  (:gen ../generator/gen_types_c))
+ (action
+  (system "%{gen} > %{targets}")))

@@ -10,10 +10,15 @@
 
 (rule
  (targets gen_types.c)
- (deps    (:gen ./gen_types_c.exe))
- (action  (run %{gen} %{targets})))
+ (deps
+  (:gen ./gen_types_c.exe))
+ (action
+  (run %{gen} %{targets})))
 
 (rule
  (targets gen_types_c)
- (deps    (:c_code ./gen_types.c))
- (action  (run %{ocaml-config:c_compiler} -I %{lib:ctypes:} -I %{ocaml-config:standard_library} -o %{targets} %{c_code})))
+ (deps
+  (:c_code ./gen_types.c))
+ (action
+  (run %{ocaml-config:c_compiler} -I %{lib:ctypes:} -I
+    %{ocaml-config:standard_library} -o %{targets} %{c_code})))

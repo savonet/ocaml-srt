@@ -2,9 +2,9 @@ open Srt
 
 let () =
   startup ();
-  Log.set_handler (fun {Log.message;_} -> print_endline message);
+  Log.set_handler (fun { Log.message; _ } -> print_endline message);
   Log.setloglevel `Warning;
-  let s = socket Unix.PF_INET Unix.SOCK_DGRAM 0 in 
+  let s = socket Unix.PF_INET Unix.SOCK_DGRAM 0 in
   Printf.printf "Messageapi: %b\n%!" (getsockflag s messageapi);
   Printf.printf "Setting transtype to file..\n%!";
   setsockflag s transtype `File;
@@ -16,4 +16,4 @@ let () =
   setsockflag s payloadsize 1234;
   Printf.printf "Payloadsize: %d\n%!" (getsockflag s payloadsize);
   close s;
-  cleanup()
+  cleanup ()
