@@ -8,6 +8,7 @@ let c_headers = "
 #include <caml/threads.h>
 
 #include <stdio.h>
+#include <pthread.h>
 
 static pthread_key_t ocaml_c_thread_key;
 static pthread_once_t ocaml_c_thread_key_once = PTHREAD_ONCE_INIT;
