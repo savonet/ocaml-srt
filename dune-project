@@ -20,5 +20,5 @@
   (dune (> 2.0))
   dune-configurator
   ctypes
-  sys-socket)
+  posix-socket)
 )

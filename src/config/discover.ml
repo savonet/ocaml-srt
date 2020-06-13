@@ -10,8 +10,8 @@ let () =
           | None -> default
           | Some pc -> (
               match
-                C.Pkg_config.query_expr_err pc
-                  ~package:"srt" ~expr:"srt >= 1.4.0"
+                C.Pkg_config.query_expr_err pc ~package:"srt"
+                  ~expr:"srt >= 1.4.0"
               with
                 | Error msg -> failwith msg
                 | Ok deps -> deps )
