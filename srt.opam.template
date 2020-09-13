@@ -2,7 +2,7 @@ depexts: [
   ["srt-devel"] {os-distribution = "centos"}
   ["srt-devel"] {os-distribution = "fedora"}
   ["srt-devel"] {os-family = "suse"}
-  ["libsrt-openssl-dev"] {os-distribution = "debian"}
+  ["libsrt-gnutls-dev libgnutls28-dev"] {os-distribution = "debian"}
   ["libsrt-dev"] {os-distribution = "ubuntu"}
   ["srt"] {os = "macos" & os-distribution = "homebrew"}
 ]
