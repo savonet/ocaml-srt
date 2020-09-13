@@ -38,6 +38,6 @@ depexts: [
   ["srt-devel"] {os-distribution = "centos"}
   ["srt-devel"] {os-distribution = "fedora"}
   ["srt-devel"] {os-family = "suse"}
-  ["libsrt-openssl-dev"] {os-family = "debian"}
+  ["libsrt-gnutls-dev"] {os-family = "debian"}
   ["srt"] {os = "macos" & os-distribution = "homebrew"}
 ]
