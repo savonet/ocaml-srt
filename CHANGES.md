@@ -1,3 +1,7 @@
+0.1.2 (unreleased)
+=====
+* Added support for uwait polling.
+
 0.1.1 (2020-06-13)
 =====
 * Switch to `posix-socket`

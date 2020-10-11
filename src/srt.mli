@@ -127,11 +127,13 @@ end
 module Poll : sig
   type t
   type flag = [ `Read | `Write | `Error ]
+  type event = { fd : socket; events : flag list }
 
   val create : unit -> t
   val add_usock : t -> socket -> flag -> unit
   val remove_usock : t -> socket -> unit
   val update_usock : t -> socket -> flag -> unit
+  val uwait : t -> max_fds:int -> timeout:int -> event list
 
   val wait :
     t ->

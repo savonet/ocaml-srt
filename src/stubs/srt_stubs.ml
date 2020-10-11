@@ -71,6 +71,10 @@ module Def (F : Cstubs.FOREIGN) = struct
     foreign "srt_epoll_update_usock"
       (int @-> int @-> ptr poll_flag @-> returning int)
 
+  let epoll_uwait =
+    foreign "srt_epoll_uwait"
+      (int @-> ptr PollEvent.t @-> int @-> int64_t @-> returning int)
+
   let epoll_wait =
     foreign "srt_epoll_wait"
       ( int @-> ptr int @-> ptr int @-> ptr int @-> ptr int @-> int64_t

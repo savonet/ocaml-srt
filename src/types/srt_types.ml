@@ -1,3 +1,5 @@
+open Ctypes
+
 module Def (S : Cstubs.Types.TYPE) = struct
   open S
 
@@ -157,6 +159,15 @@ module Def (S : Cstubs.Types.TYPE) = struct
         (`Epeererr, constant "SRT_EPEERERR" int64_t);
       ]
 
+  let srt_epoll_in = constant "SRT_EPOLL_IN" int64_t
+  let srt_epoll_out = constant "SRT_EPOLL_OUT" int64_t
+  let srt_epoll_err = constant "SRT_EPOLL_ERR" int64_t
+
+  let poll_flag_of_flag = function
+    | `Read -> srt_epoll_in
+    | `Write -> srt_epoll_out
+    | `Error -> srt_epoll_err
+
   let poll_flag : poll_flag typ =
     enum "SRT_EPOLL_OPT"
       [
@@ -167,4 +178,13 @@ module Def (S : Cstubs.Types.TYPE) = struct
 
   let poll_flag = typedef poll_flag "const int"
   let const_string = typedef string "const char*"
+
+  module PollEvent = struct
+    type t = unit
+
+    let t : t structure S.typ = S.structure "SRT_EPOLL_EVENT_"
+    let fd : (int, t structure) S.field = S.field t "fd" S.int
+    let events : (int, t structure) S.field = S.field t "events" int
+    let () = S.seal t
+  end
 end

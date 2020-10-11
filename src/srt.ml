@@ -207,6 +207,7 @@ let startup = startup
 module Poll = struct
   type t = int
   type flag = Srt.poll_flag
+  type event = { fd : socket; events : flag list }
 
   let create = epoll_create
 
@@ -221,6 +222,27 @@ module Poll = struct
     ignore (check_err (epoll_update_usock eid s e))
 
   let release eid = ignore (check_err (epoll_release eid))
+
+  let uwait eid ~max_fds ~timeout =
+    let timeout = Int64.of_int timeout in
+    let events = CArray.make PollEvent.t max_fds in
+    let nb_events =
+      check_err (epoll_uwait eid (CArray.start events) max_fds timeout)
+    in
+    let events = CArray.to_list (CArray.sub events ~pos:0 ~length:nb_events) in
+    List.map
+      (fun event ->
+        let fd = getf event PollEvent.fd in
+        let events = getf event PollEvent.events in
+        let events =
+          List.fold_left
+            (fun cur flag ->
+              let poll_flag = Int64.to_int (poll_flag_of_flag flag) in
+              if poll_flag land events <> 0 then flag :: cur else cur)
+            [] [`Read; `Write; `Error]
+        in
+        { fd; events })
+      events
 
   let wait eid ~max_read ~max_write ~timeout =
     let timeout = Int64.of_int timeout in
