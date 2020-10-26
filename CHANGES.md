@@ -1,6 +1,7 @@
 0.1.2 (unreleased)
 =====
 * Added support for uwait polling.
+* Added support for stats.
 
 0.1.1 (2020-06-13)
 =====

@@ -1,4 +1,11 @@
 (library
  (name srt_types)
  (public_name srt.types)
- (libraries ctypes.stubs))
+ (libraries ctypes.stubs srt.constants))
+
+(rule
+ (targets srt_generated_constants.ml)
+ (action
+  (with-stdout-to
+   %{targets}
+   (run ../generator/gen_constants_c))))

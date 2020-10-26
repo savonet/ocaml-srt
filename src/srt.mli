@@ -20,6 +20,8 @@
 
 (** OCaml bindings for the libsrt. *)
 
+open Unsigned
+
 type socket
 
 type socket_status =
@@ -130,9 +132,9 @@ module Poll : sig
   type event = { fd : socket; events : flag list }
 
   val create : unit -> t
-  val add_usock : t -> socket -> flag -> unit
+  val add_usock : t -> socket -> flag list -> unit
   val remove_usock : t -> socket -> unit
-  val update_usock : t -> socket -> flag -> unit
+  val update_usock : t -> socket -> flag list -> unit
   val uwait : t -> max_fds:int -> timeout:int -> event list
 
   val wait :
@@ -143,4 +145,84 @@ module Poll : sig
     socket list * socket list
 
   val release : t -> unit
+end
+
+module Stats : sig
+  type t = {
+    msTimeStamp : int64;
+    pktSentTotal : int64;
+    pktRecvTotal : int64;
+    pktSndLossTotal : int;
+    pktRcvLossTotal : int;
+    pktRetransTotal : int;
+    pktSentACKTotal : int;
+    pktRecvACKTotal : int;
+    pktSentNAKTotal : int;
+    pktRecvNAKTotal : int;
+    usSndDurationTotal : int64;
+    pktSndDropTotal : int;
+    pktRcvDropTotal : int;
+    pktRcvUndecryptTotal : int;
+    byteSentTotal : UInt64.t;
+    byteRecvTotal : UInt64.t;
+    byteRetransTotal : UInt64.t;
+    byteSndDropTotal : UInt64.t;
+    byteRcvDropTotal : UInt64.t;
+    byteRcvUndecryptTotal : UInt64.t;
+    pktSent : int64;
+    pktRecv : int64;
+    pktSndLoss : int;
+    pktRcvLoss : int;
+    pktRetrans : int;
+    pktRcvRetrans : int;
+    pktSentACK : int;
+    pktRecvACK : int;
+    pktSentNAK : int;
+    pktRecvNAK : int;
+    mbpsSendRate : float;
+    mbpsRecvRate : float;
+    usSndDuration : int64;
+    pktReorderDistance : int;
+    pktRcvAvgBelatedTime : float;
+    pktRcvBelated : int64;
+    pktSndDrop : int;
+    pktRcvDrop : int;
+    pktRcvUndecrypt : int;
+    byteSent : UInt64.t;
+    byteRecv : UInt64.t;
+    byteRetrans : UInt64.t;
+    byteSndDrop : UInt64.t;
+    byteRcvDrop : UInt64.t;
+    byteRcvUndecrypt : UInt64.t;
+    usPktSndPeriod : float;
+    pktFlowWindow : int;
+    pktCongestionWindow : int;
+    pktFlightSize : int;
+    msRTT : float;
+    mbpsBandwidth : float;
+    byteAvailSndBuf : int;
+    byteAvailRcvBuf : int;
+    mbpsMaxBW : float;
+    byteMSS : int;
+    pktSndBuf : int;
+    byteSndBuf : int;
+    msSndBuf : int;
+    msSndTsbPdDelay : int;
+    pktRcvBuf : int;
+    byteRcvBuf : int;
+    msRcvBuf : int;
+    msRcvTsbPdDelay : int;
+    pktSndFilterExtraTotal : int;
+    pktRcvFilterExtraTotal : int;
+    pktRcvFilterSupplyTotal : int;
+    pktRcvFilterLossTotal : int;
+    pktSndFilterExtra : int;
+    pktRcvFilterExtra : int;
+    pktRcvFilterSupply : int;
+    pktRcvFilterLoss : int;
+    pktReorderTolerance : int;
+  }
+
+  val bstats : ?clear:bool -> socket -> t
+  val bistats : ?clear:bool -> ?instantaneous:bool -> socket -> t
 end

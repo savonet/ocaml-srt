@@ -4,6 +4,7 @@ open Posix_socket
 type socket = int
 
 module Def (F : Cstubs.FOREIGN) = struct
+  include Srt_types
   include Srt_types.Def (Srt_generated_types)
   open F
 
@@ -61,15 +62,13 @@ module Def (F : Cstubs.FOREIGN) = struct
   let epoll_create = foreign "srt_epoll_create" (void @-> returning int)
 
   let epoll_add_usock =
-    foreign "srt_epoll_add_usock"
-      (int @-> int @-> ptr poll_flag @-> returning int)
+    foreign "srt_epoll_add_usock" (int @-> int @-> ptr int @-> returning int)
 
   let epoll_remove_usock =
     foreign "srt_epoll_remove_usock" (int @-> int @-> returning int)
 
   let epoll_update_usock =
-    foreign "srt_epoll_update_usock"
-      (int @-> int @-> ptr poll_flag @-> returning int)
+    foreign "srt_epoll_update_usock" (int @-> int @-> ptr int @-> returning int)
 
   let epoll_uwait =
     foreign "srt_epoll_uwait"
@@ -81,4 +80,11 @@ module Def (F : Cstubs.FOREIGN) = struct
       @-> ptr void @-> ptr void @-> ptr void @-> ptr void @-> returning int )
 
   let epoll_release = foreign "srt_epoll_release" (int @-> returning int)
+
+  let bstats =
+    foreign "srt_bstats" (int @-> ptr CBytePerfMon.t @-> int @-> returning int)
+
+  let bistats =
+    foreign "srt_bistats"
+      (int @-> ptr CBytePerfMon.t @-> int @-> int @-> returning int)
 end

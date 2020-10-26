@@ -4,6 +4,7 @@ module Srt = Srt_stubs.Def (Srt_generated_stubs)
 open Srt
 module Srt_locked = Srt_stubs_locked.Def (Srt_generated_stubs_locked)
 open Srt_locked
+open Unsigned
 
 exception Invalid_argument of string
 exception Error of errno * string
@@ -211,15 +212,33 @@ module Poll = struct
 
   let create = epoll_create
 
-  let add_usock eid s e =
-    let e = allocate Srt.poll_flag e in
-    ignore (check_err (epoll_add_usock eid s e))
+  let add_usock eid s flags =
+    let flags =
+      if List.length flags > 0 then (
+        let flags =
+          List.fold_left
+            (fun cur flag -> cur land Int64.to_int (poll_flag_of_flag flag))
+            0 flags
+        in
+        allocate Ctypes.int flags )
+      else Ctypes.(from_voidp int null)
+    in
+    ignore (check_err (epoll_add_usock eid s flags))
 
   let remove_usock eid s = ignore (check_err (epoll_remove_usock eid s))
 
-  let update_usock eid s e =
-    let e = allocate Srt.poll_flag e in
-    ignore (check_err (epoll_update_usock eid s e))
+  let update_usock eid s flags =
+    let flags =
+      if List.length flags > 0 then (
+        let flags =
+          List.fold_left
+            (fun cur flag -> cur land Int64.to_int (poll_flag_of_flag flag))
+            0 flags
+        in
+        allocate Ctypes.int flags )
+      else Ctypes.(from_voidp int null)
+    in
+    ignore (check_err (epoll_update_usock eid s flags))
 
   let release eid = ignore (check_err (epoll_release eid))
 
@@ -301,4 +320,171 @@ module Log = struct
   let clear_handler () =
     ocaml_srt_clear_log_handler ();
     Root.set log_ref ()
+end
+
+module Stats = struct
+  type t = {
+    msTimeStamp : int64;
+    pktSentTotal : int64;
+    pktRecvTotal : int64;
+    pktSndLossTotal : int;
+    pktRcvLossTotal : int;
+    pktRetransTotal : int;
+    pktSentACKTotal : int;
+    pktRecvACKTotal : int;
+    pktSentNAKTotal : int;
+    pktRecvNAKTotal : int;
+    usSndDurationTotal : int64;
+    pktSndDropTotal : int;
+    pktRcvDropTotal : int;
+    pktRcvUndecryptTotal : int;
+    byteSentTotal : UInt64.t;
+    byteRecvTotal : UInt64.t;
+    byteRetransTotal : UInt64.t;
+    byteSndDropTotal : UInt64.t;
+    byteRcvDropTotal : UInt64.t;
+    byteRcvUndecryptTotal : UInt64.t;
+    pktSent : int64;
+    pktRecv : int64;
+    pktSndLoss : int;
+    pktRcvLoss : int;
+    pktRetrans : int;
+    pktRcvRetrans : int;
+    pktSentACK : int;
+    pktRecvACK : int;
+    pktSentNAK : int;
+    pktRecvNAK : int;
+    mbpsSendRate : float;
+    mbpsRecvRate : float;
+    usSndDuration : int64;
+    pktReorderDistance : int;
+    pktRcvAvgBelatedTime : float;
+    pktRcvBelated : int64;
+    pktSndDrop : int;
+    pktRcvDrop : int;
+    pktRcvUndecrypt : int;
+    byteSent : UInt64.t;
+    byteRecv : UInt64.t;
+    byteRetrans : UInt64.t;
+    byteSndDrop : UInt64.t;
+    byteRcvDrop : UInt64.t;
+    byteRcvUndecrypt : UInt64.t;
+    usPktSndPeriod : float;
+    pktFlowWindow : int;
+    pktCongestionWindow : int;
+    pktFlightSize : int;
+    msRTT : float;
+    mbpsBandwidth : float;
+    byteAvailSndBuf : int;
+    byteAvailRcvBuf : int;
+    mbpsMaxBW : float;
+    byteMSS : int;
+    pktSndBuf : int;
+    byteSndBuf : int;
+    msSndBuf : int;
+    msSndTsbPdDelay : int;
+    pktRcvBuf : int;
+    byteRcvBuf : int;
+    msRcvBuf : int;
+    msRcvTsbPdDelay : int;
+    pktSndFilterExtraTotal : int;
+    pktRcvFilterExtraTotal : int;
+    pktRcvFilterSupplyTotal : int;
+    pktRcvFilterLossTotal : int;
+    pktSndFilterExtra : int;
+    pktRcvFilterExtra : int;
+    pktRcvFilterSupply : int;
+    pktRcvFilterLoss : int;
+    pktReorderTolerance : int;
+  }
+
+  let from_struct stats =
+    {
+      msTimeStamp = !@(stats |-> CBytePerfMon.msTimeStamp);
+      pktSentTotal = !@(stats |-> CBytePerfMon.pktSentTotal);
+      pktRecvTotal = !@(stats |-> CBytePerfMon.pktRecvTotal);
+      pktSndLossTotal = !@(stats |-> CBytePerfMon.pktSndLossTotal);
+      pktRcvLossTotal = !@(stats |-> CBytePerfMon.pktRcvLossTotal);
+      pktRetransTotal = !@(stats |-> CBytePerfMon.pktRetransTotal);
+      pktSentACKTotal = !@(stats |-> CBytePerfMon.pktSentACKTotal);
+      pktRecvACKTotal = !@(stats |-> CBytePerfMon.pktRecvACKTotal);
+      pktSentNAKTotal = !@(stats |-> CBytePerfMon.pktSentNAKTotal);
+      pktRecvNAKTotal = !@(stats |-> CBytePerfMon.pktRecvNAKTotal);
+      usSndDurationTotal = !@(stats |-> CBytePerfMon.usSndDurationTotal);
+      pktSndDropTotal = !@(stats |-> CBytePerfMon.pktSndDropTotal);
+      pktRcvDropTotal = !@(stats |-> CBytePerfMon.pktRcvDropTotal);
+      pktRcvUndecryptTotal = !@(stats |-> CBytePerfMon.pktRcvUndecryptTotal);
+      byteSentTotal = !@(stats |-> CBytePerfMon.byteSentTotal);
+      byteRecvTotal = !@(stats |-> CBytePerfMon.byteRecvTotal);
+      byteRetransTotal = !@(stats |-> CBytePerfMon.byteRetransTotal);
+      byteSndDropTotal = !@(stats |-> CBytePerfMon.byteSndDropTotal);
+      byteRcvDropTotal = !@(stats |-> CBytePerfMon.byteRcvDropTotal);
+      byteRcvUndecryptTotal = !@(stats |-> CBytePerfMon.byteRcvUndecryptTotal);
+      pktSent = !@(stats |-> CBytePerfMon.pktSent);
+      pktRecv = !@(stats |-> CBytePerfMon.pktRecv);
+      pktSndLoss = !@(stats |-> CBytePerfMon.pktSndLoss);
+      pktRcvLoss = !@(stats |-> CBytePerfMon.pktRcvLoss);
+      pktRetrans = !@(stats |-> CBytePerfMon.pktRetrans);
+      pktRcvRetrans = !@(stats |-> CBytePerfMon.pktRcvRetrans);
+      pktSentACK = !@(stats |-> CBytePerfMon.pktSentACK);
+      pktRecvACK = !@(stats |-> CBytePerfMon.pktRecvACK);
+      pktSentNAK = !@(stats |-> CBytePerfMon.pktSentNAK);
+      pktRecvNAK = !@(stats |-> CBytePerfMon.pktRecvNAK);
+      mbpsSendRate = !@(stats |-> CBytePerfMon.mbpsSendRate);
+      mbpsRecvRate = !@(stats |-> CBytePerfMon.mbpsRecvRate);
+      usSndDuration = !@(stats |-> CBytePerfMon.usSndDuration);
+      pktReorderDistance = !@(stats |-> CBytePerfMon.pktReorderDistance);
+      pktRcvAvgBelatedTime = !@(stats |-> CBytePerfMon.pktRcvAvgBelatedTime);
+      pktRcvBelated = !@(stats |-> CBytePerfMon.pktRcvBelated);
+      pktSndDrop = !@(stats |-> CBytePerfMon.pktSndDrop);
+      pktRcvDrop = !@(stats |-> CBytePerfMon.pktRcvDrop);
+      pktRcvUndecrypt = !@(stats |-> CBytePerfMon.pktRcvUndecrypt);
+      byteSent = !@(stats |-> CBytePerfMon.byteSent);
+      byteRecv = !@(stats |-> CBytePerfMon.byteRecv);
+      byteRetrans = !@(stats |-> CBytePerfMon.byteRetrans);
+      byteSndDrop = !@(stats |-> CBytePerfMon.byteSndDrop);
+      byteRcvDrop = !@(stats |-> CBytePerfMon.byteRcvDrop);
+      byteRcvUndecrypt = !@(stats |-> CBytePerfMon.byteRcvUndecrypt);
+      usPktSndPeriod = !@(stats |-> CBytePerfMon.usPktSndPeriod);
+      pktFlowWindow = !@(stats |-> CBytePerfMon.pktFlowWindow);
+      pktCongestionWindow = !@(stats |-> CBytePerfMon.pktCongestionWindow);
+      pktFlightSize = !@(stats |-> CBytePerfMon.pktFlightSize);
+      msRTT = !@(stats |-> CBytePerfMon.msRTT);
+      mbpsBandwidth = !@(stats |-> CBytePerfMon.mbpsBandwidth);
+      byteAvailSndBuf = !@(stats |-> CBytePerfMon.byteAvailSndBuf);
+      byteAvailRcvBuf = !@(stats |-> CBytePerfMon.byteAvailRcvBuf);
+      mbpsMaxBW = !@(stats |-> CBytePerfMon.mbpsMaxBW);
+      byteMSS = !@(stats |-> CBytePerfMon.byteMSS);
+      pktSndBuf = !@(stats |-> CBytePerfMon.pktSndBuf);
+      byteSndBuf = !@(stats |-> CBytePerfMon.byteSndBuf);
+      msSndBuf = !@(stats |-> CBytePerfMon.msSndBuf);
+      msSndTsbPdDelay = !@(stats |-> CBytePerfMon.msSndTsbPdDelay);
+      pktRcvBuf = !@(stats |-> CBytePerfMon.pktRcvBuf);
+      byteRcvBuf = !@(stats |-> CBytePerfMon.byteRcvBuf);
+      msRcvBuf = !@(stats |-> CBytePerfMon.msRcvBuf);
+      msRcvTsbPdDelay = !@(stats |-> CBytePerfMon.msRcvTsbPdDelay);
+      pktSndFilterExtraTotal = !@(stats |-> CBytePerfMon.pktSndFilterExtraTotal);
+      pktRcvFilterExtraTotal = !@(stats |-> CBytePerfMon.pktRcvFilterExtraTotal);
+      pktRcvFilterSupplyTotal =
+        !@(stats |-> CBytePerfMon.pktRcvFilterSupplyTotal);
+      pktRcvFilterLossTotal = !@(stats |-> CBytePerfMon.pktRcvFilterLossTotal);
+      pktSndFilterExtra = !@(stats |-> CBytePerfMon.pktSndFilterExtra);
+      pktRcvFilterExtra = !@(stats |-> CBytePerfMon.pktRcvFilterExtra);
+      pktRcvFilterSupply = !@(stats |-> CBytePerfMon.pktRcvFilterSupply);
+      pktRcvFilterLoss = !@(stats |-> CBytePerfMon.pktRcvFilterLoss);
+      pktReorderTolerance = !@(stats |-> CBytePerfMon.pktReorderTolerance);
+    }
+
+  let bstats ?(clear = false) socket =
+    let clear = if clear then 0 else 1 in
+    let stats = allocate_n CBytePerfMon.t ~count:1 in
+    ignore (check_err (bstats socket stats clear));
+    from_struct stats
+
+  let bistats ?(clear = false) ?(instantaneous = false) socket =
+    let clear = if clear then 0 else 1 in
+    let instantaneous = if instantaneous then 0 else 1 in
+    let stats = allocate_n CBytePerfMon.t ~count:1 in
+    ignore (check_err (bistats socket stats clear instantaneous));
+    from_struct stats
 end

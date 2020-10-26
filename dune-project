@@ -20,5 +20,6 @@
   (dune (> 2.0))
   dune-configurator
   ctypes
+  integers
   posix-socket)
 )

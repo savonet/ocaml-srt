@@ -17,6 +17,7 @@ depends: [
   "dune" {> "2.0"}
   "dune-configurator"
   "ctypes"
+  "integers"
   "posix-socket"
 ]
 build: [
@@ -38,7 +39,7 @@ depexts: [
   ["srt-devel"] {os-distribution = "centos"}
   ["srt-devel"] {os-distribution = "fedora"}
   ["srt-devel"] {os-family = "suse"}
-  ["libsrt-gnutls-dev" "libgnutls28-dev"] {os-distribution = "debian"}
+  ["libsrt-gnutls-dev libgnutls28-dev"] {os-distribution = "debian"}
   ["libsrt-dev"] {os-distribution = "ubuntu"}
   ["srt"] {os = "macos" & os-distribution = "homebrew"}
 ]
