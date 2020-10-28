@@ -220,7 +220,6 @@ module Stats : sig
     pktRcvFilterExtra : int;
     pktRcvFilterSupply : int;
     pktRcvFilterLoss : int;
-    pktReorderTolerance : int;
   }
 
   val bstats : ?clear:bool -> socket -> t

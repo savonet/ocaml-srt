@@ -101,7 +101,11 @@ module Def (S : Cstubs.Types.TYPE) = struct
     let pktRcvFilterExtra = S.field t "pktRcvFilterExtra" S.int
     let pktRcvFilterSupply = S.field t "pktRcvFilterSupply" S.int
     let pktRcvFilterLoss = S.field t "pktRcvFilterLoss" S.int
-    let pktReorderTolerance = S.field t "pktReorderTolerance" S.int
+
+    (* Looks like this one is also too recent for our current set of supported
+          platforms:
+       let pktReorderTolerance = S.field t "pktReorderTolerance" S.int
+    *)
     let () = S.seal t
   end
 end

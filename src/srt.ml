@@ -395,7 +395,6 @@ module Stats = struct
     pktRcvFilterExtra : int;
     pktRcvFilterSupply : int;
     pktRcvFilterLoss : int;
-    pktReorderTolerance : int;
   }
 
   let from_struct stats =
@@ -472,7 +471,6 @@ module Stats = struct
       pktRcvFilterExtra = !@(stats |-> CBytePerfMon.pktRcvFilterExtra);
       pktRcvFilterSupply = !@(stats |-> CBytePerfMon.pktRcvFilterSupply);
       pktRcvFilterLoss = !@(stats |-> CBytePerfMon.pktRcvFilterLoss);
-      pktReorderTolerance = !@(stats |-> CBytePerfMon.pktReorderTolerance);
     }
 
   let bstats ?(clear = false) socket =
