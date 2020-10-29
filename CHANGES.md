@@ -1,7 +1,8 @@
-0.1.2 (unreleased)
+0.2.0 (unreleased)
 =====
 * Added support for uwait polling.
 * Added support for stats.
+* Remove deprecated `srt_socket` 
 
 0.1.1 (2020-06-13)
 =====

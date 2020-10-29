@@ -4,7 +4,7 @@ let () =
   startup ();
   Log.set_handler (fun { Log.message; _ } -> print_endline message);
   Log.setloglevel `Warning;
-  let s = socket Unix.PF_INET Unix.SOCK_DGRAM 0 in
+  let s = create_socket () in
   Printf.printf "Messageapi: %b\n%!" (getsockflag s messageapi);
   Printf.printf "Setting transtype to file..\n%!";
   setsockflag s transtype `File;

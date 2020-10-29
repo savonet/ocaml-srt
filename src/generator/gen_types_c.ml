@@ -1,4 +1,10 @@
-let c_headers = "#include <srt/srt.h>"
+let c_headers = {|
+#include <srt/srt.h>
+
+#if (SRT_VERSION_MAJOR <= 1) && (SRT_VERSION_MINOR <= 4) && (SRT_VERSION_PATCH <= 1)
+#define SRT_EPOLL_EVENT_STR SRT_EPOLL_EVENT_
+#endif
+|}
 
 let () =
   let fname = Sys.argv.(1) in

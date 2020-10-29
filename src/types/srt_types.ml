@@ -10,7 +10,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
   module PollEvent = struct
     type t = unit
 
-    let t : t structure S.typ = S.structure "SRT_EPOLL_EVENT_"
+    let t : t structure S.typ = S.structure "SRT_EPOLL_EVENT_STR"
+    let t = S.typedef t "SRT_EPOLL_EVENT"
     let fd = S.field t "fd" S.int
     let events = S.field t "events" S.int
     let () = S.seal t

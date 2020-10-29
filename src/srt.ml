@@ -111,22 +111,6 @@ let transtype_of_int x = function
   | _ ->
       raise (Invalid_argument ("Invalid transtype value: " ^ string_of_int x))
 
-let socket _of _type _protocol =
-  let _of =
-    match _of with
-      | Unix.PF_UNIX -> raise (Invalid_argument "PF_UNIX is not supported")
-      | Unix.PF_INET -> af_inet
-      | Unix.PF_INET6 -> af_inet6
-  in
-  let _type =
-    match _type with
-      | Unix.SOCK_DGRAM -> sock_dgram
-      | Unix.SOCK_STREAM -> sock_stream
-      | Unix.SOCK_RAW -> raise (Invalid_argument "SOCK_RAW is not supported")
-      | Unix.SOCK_SEQPACKET -> sock_seqpacket
-  in
-  check_err (socket _of _type _protocol)
-
 open Ctypes
 
 let apply_sockaddr fn sockaddr =

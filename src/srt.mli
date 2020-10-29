@@ -95,7 +95,6 @@ exception Error of errno * string
 val startup : unit -> unit
 val cleanup : unit -> unit
 val create_socket : unit -> socket
-val socket : Unix.socket_domain -> Unix.socket_type -> int -> socket
 val getsockstate : socket -> socket_status
 val bind : socket -> Unix.sockaddr -> unit
 val listen : socket -> int -> unit
