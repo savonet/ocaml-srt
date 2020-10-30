@@ -1,4 +1,5 @@
-let c_headers = {|
+let c_headers =
+  {|
 #include <srt/srt.h>
 
 #if (SRT_VERSION_MAJOR <= 1) && (SRT_VERSION_MINOR <= 4) && (SRT_VERSION_PATCH <= 1)

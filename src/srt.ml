@@ -196,31 +196,33 @@ module Poll = struct
 
   let create = epoll_create
 
-  let add_usock eid s flags =
+  let add_usock eid s ?flags =
     let flags =
-      if List.length flags > 0 then (
-        let flags =
-          List.fold_left
-            (fun cur flag -> cur land Int64.to_int (poll_flag_of_flag flag))
-            0 flags
-        in
-        allocate Ctypes.int flags )
-      else Ctypes.(from_voidp int null)
+      match flags with
+        | None -> Ctypes.(from_voidp int null)
+        | Some flags ->
+            let flags =
+              List.fold_left
+                (fun cur flag -> cur lor Int64.to_int (poll_flag_of_flag flag))
+                0 flags
+            in
+            allocate Ctypes.int flags
     in
     ignore (check_err (epoll_add_usock eid s flags))
 
   let remove_usock eid s = ignore (check_err (epoll_remove_usock eid s))
 
-  let update_usock eid s flags =
+  let update_usock eid s ?flags =
     let flags =
-      if List.length flags > 0 then (
-        let flags =
-          List.fold_left
-            (fun cur flag -> cur land Int64.to_int (poll_flag_of_flag flag))
-            0 flags
-        in
-        allocate Ctypes.int flags )
-      else Ctypes.(from_voidp int null)
+      match flags with
+        | None -> Ctypes.(from_voidp int null)
+        | Some flags ->
+            let flags =
+              List.fold_left
+                (fun cur flag -> cur lor Int64.to_int (poll_flag_of_flag flag))
+                0 flags
+            in
+            allocate Ctypes.int flags
     in
     ignore (check_err (epoll_update_usock eid s flags))
 
