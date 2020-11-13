@@ -11,6 +11,9 @@
 (rule
  (targets srt_generated_types.ml)
  (deps
-  (:gen ../generator/gen_types_c))
+  (:exec ../generator/exec.sh)
+  (:gen ../generator/gen_types_c_target.exe))
  (action
-  (system "%{gen} > %{targets}")))
+  (with-stdout-to
+   %{targets}
+   (system "%{exec} %{ocaml-config:system} %{gen}"))))
