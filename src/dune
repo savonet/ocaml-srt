@@ -19,27 +19,31 @@
 (rule
  (targets srt_generated_stubs.ml)
  (deps
+  (:exec ./generator/exec.sh)
   (:gen ./generator/gen_stubs.exe))
  (action
-  (run %{gen} ml %{targets})))
+  (system "%{exec} %{ocaml-config:system} %{gen} ml %{targets}")))
 
 (rule
  (targets srt_generated_stubs.c)
  (deps
+  (:exec ./generator/exec.sh)
   (:gen ./generator/gen_stubs.exe))
  (action
-  (run %{gen} c %{targets})))
+  (system "%{exec} %{ocaml-config:system} %{gen} c %{targets}")))
 
 (rule
  (targets srt_generated_stubs_locked.ml)
  (deps
+  (:exec ./generator/exec.sh)
   (:gen ./generator/gen_stubs.exe))
  (action
-  (run %{gen} ml %{targets} locked)))
+  (system "%{exec} %{ocaml-config:system} %{gen} ml %{targets} locked")))
 
 (rule
  (targets srt_generated_stubs_locked.c)
  (deps
+  (:exec ./generator/exec.sh)
   (:gen ./generator/gen_stubs.exe))
  (action
-  (run %{gen} c %{targets} locked)))
+  (system "%{exec} %{ocaml-config:system} %{gen} c %{targets} locked")))

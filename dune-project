@@ -1,4 +1,4 @@
-(lang dune 2.0)
+(lang dune 2.1)
 (version 0.1.1)
 (name srt)
 (source (github savonet/ocaml-srt))
