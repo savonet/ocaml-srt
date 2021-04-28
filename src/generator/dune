@@ -16,6 +16,7 @@
      %{lib:unix:unix.cmxa}
      %{lib:str:str.cmxa}
      %{lib:integers:integers.cmxa}
+     %{lib:bigarray-compat:bigarray_compat.cmxa}
      %{lib:ctypes.stubs:ctypes.cmxa}
      %{lib:ctypes.stubs:cstubs.cmxa}
      %{lib:posix-base:posix_base.cmxa}
@@ -42,6 +43,7 @@
      -I ../types/.srt_types.objs/byte/
      %{lib:str:str.cmxa}
      %{lib:integers:integers.cmxa}
+     %{lib:bigarray-compat:bigarray_compat.cmxa}
      %{lib:ctypes.stubs:ctypes.cmxa}
      %{lib:ctypes.stubs:cstubs.cmxa}
      %{lib-private:srt.constants:srt_constants.cmxa}
@@ -83,6 +85,7 @@
      -I ../constants/.srt_constants.objs/byte/
      %{lib:str:str.cmxa}
      %{lib:integers:integers.cmxa}
+     %{lib:bigarray-compat:bigarray_compat.cmxa}
      %{lib:ctypes.stubs:ctypes.cmxa}
      %{lib:ctypes.stubs:cstubs.cmxa}
      %{lib-private:srt.constants:srt_constants.cmxa}
