@@ -7,11 +7,9 @@ ARG2=$4
 ARG3=$5
 
 if test "${SYSTEM}" = "mingw"; then
-  export OCAMLFIND_TOOLCHAIN=windows
-  wine $CMD $ARG1 $ARG2 $ARG3
+  OCAMLFIND_TOOLCHAIN=windows wine $CMD $ARG1 $ARG2 $ARG3
 elif test "${SYSTEM}" = "mingw64"; then
-  export OCAMLFIND_TOOLCHAIN=windows
-  wine64 $CMD $ARG1 $ARG2 $ARG3
+  OCAMLFIND_TOOLCHAIN=windows wine64 $CMD $ARG1 $ARG2 $ARG3
 else
   $CMD $ARG $ARG1 $ARG2 $ARG3
 fi
