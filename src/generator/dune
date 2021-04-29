@@ -1,38 +1,28 @@
 (rule
  (targets gen_stubs.exe)
  (deps
-   (:ml ./gen_stubs.ml))
+  (:build_native ./build_native.sh)
+  (:ml ./gen_stubs.ml))
  (action
-   (run ocamlfind -toolchain %{context_name} ocamlopt
-     -linkpkg
-     -package ctypes.stubs
-     -package posix-socket
-     -I ../stubs
-     -I ../stubs/.srt_stubs.objs/native/
-     -I ../stubs/.srt_stubs.objs/byte/
-     -I ../stubs/locked
-     -I ../stubs/locked/.srt_stubs_locked.objs/native/
-     -I ../stubs/locked/.srt_stubs_locked.objs/byte/
-     %{lib-private:srt.constants:srt_constants.cmxa}
-     %{lib-private:srt.types:srt_types.cmxa}
-     %{lib-private:srt.stubs:srt_stubs.cmxa}
-     %{lib-private:srt.stubs:locked/.srt_stubs_locked.objs/native/srt_stubs_locked.cmx}
-     %{ml} -o %{targets})))
+  (run %{build_native} %{ocaml-config:system} %{ml} %{targets} -I ../stubs -I
+    ../stubs/.srt_stubs.objs/native/ -I ../stubs/.srt_stubs.objs/byte/ -I
+    ../stubs/locked -I ../stubs/locked/.srt_stubs_locked.objs/native/ -I
+    ../stubs/locked/.srt_stubs_locked.objs/byte/
+    %{lib-private:srt.constants:srt_constants.cmxa}
+    %{lib-private:srt.types:srt_types.cmxa}
+    %{lib-private:srt.stubs:srt_stubs.cmxa}
+    %{lib-private:srt.stubs:locked/.srt_stubs_locked.objs/native/srt_stubs_locked.cmx})))
 
 (rule
  (targets gen_types_c.exe)
  (deps
-   (:ml ./gen_types_c.ml))
+  (:build_native ./build_native.sh)
+  (:ml ./gen_types_c.ml))
  (action
-   (run ocamlfind ocamlopt
-     -linkpkg
-     -package ctypes.stubs
-     -I ../types
-     -I ../types/.srt_types.objs/native/
-     -I ../types/.srt_types.objs/byte/
-     %{lib-private:srt.constants:srt_constants.cmxa}
-     %{lib-private:srt.types:srt_types.cmxa}
-     %{ml} -o %{targets})))
+  (run %{build_native} %{ocaml-config:system} %{ml} %{targets} -I ../types -I
+    ../types/.srt_types.objs/native/ -I ../types/.srt_types.objs/byte/
+    %{lib-private:srt.constants:srt_constants.cmxa}
+    %{lib-private:srt.types:srt_types.cmxa})))
 
 (rule
  (targets gen_types.c)
@@ -54,21 +44,19 @@
   (:c_code ./gen_types.c))
  (action
   (run %{ocaml-config:c_compiler} -I %{lib:ctypes:} -I
-    %{ocaml-config:standard_library} %{read-lines:c_flags} -o %{targets} %{c_code})))
+    %{ocaml-config:standard_library} %{read-lines:c_flags} -o %{targets}
+    %{c_code})))
 
 (rule
  (targets gen_constants_c.exe)
  (deps
-   (:ml gen_constants_c.ml))
+  (:build_native ./build_native.sh)
+  (:ml gen_constants_c.ml))
  (action
-   (run ocamlfind ocamlopt
-     -linkpkg
-     -package ctypes.stubs
-     -I ../constants
-     -I ../constants/.srt_constants.objs/native/
-     -I ../constants/.srt_constants.objs/byte/
-     %{lib-private:srt.constants:srt_constants.cmxa}
-     %{ml} -o %{targets})))
+  (run %{build_native} %{ocaml-config:system} %{ml} %{targets} -I
+    ../constants -I ../constants/.srt_constants.objs/native/ -I
+    ../constants/.srt_constants.objs/byte/
+    %{lib-private:srt.constants:srt_constants.cmxa})))
 
 (rule
  (targets gen_constants.c)
@@ -76,7 +64,7 @@
   (:exec ./exec.sh)
   (:gen ./gen_constants_c.exe))
  (action
-  (system "./%{exec} %{ocaml-config:system} ./%{gen} %{targets}"))) 
+  (system "./%{exec} %{ocaml-config:system} ./%{gen} %{targets}")))
 
 (rule
  (targets gen_constants_c_target.exe)
@@ -85,4 +73,5 @@
   (:c_code ./gen_constants.c))
  (action
   (run %{ocaml-config:c_compiler} -I %{lib:ctypes:} -I
-    %{ocaml-config:standard_library} %{read-lines:c_flags} -o %{targets} %{c_code})))
+    %{ocaml-config:standard_library} %{read-lines:c_flags} -o %{targets}
+    %{c_code})))
