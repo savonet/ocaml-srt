@@ -3,7 +3,7 @@
  (deps
    (:ml ./gen_stubs.ml))
  (action
-   (run ocamlfind ocamlopt
+   (run ocamlfind -toolchain %{context_name} ocamlopt
      -linkpkg
      -package ctypes.stubs
      -package posix-socket
