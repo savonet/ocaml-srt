@@ -3,27 +3,16 @@
  (deps
    (:ml ./gen_stubs.ml))
  (action
-   (run %{ocamlopt}
-     -I %{lib:ctypes.stubs:}
-     -I %{lib:posix-socket:}
-     -I %{lib:integers:}
+   (run ocamlfind ocamlopt
+     -linkpkg
+     -package ctypes.stubs
+     -package posix-socket
      -I ../stubs
      -I ../stubs/.srt_stubs.objs/native/
      -I ../stubs/.srt_stubs.objs/byte/
      -I ../stubs/locked
      -I ../stubs/locked/.srt_stubs_locked.objs/native/
      -I ../stubs/locked/.srt_stubs_locked.objs/byte/
-     %{lib:unix:unix.cmxa}
-     %{lib:str:str.cmxa}
-     %{lib:integers:integers.cmxa}
-     %{lib:bigarray-compat:bigarray_compat.cmxa}
-     %{lib:ctypes.stubs:ctypes.cmxa}
-     %{lib:ctypes.stubs:cstubs.cmxa}
-     %{lib:posix-base:posix_base.cmxa}
-     %{lib:posix-socket:constants/posix_socket_constants.cmxa}
-     %{lib:posix-socket:types/posix_socket_types.cmxa}
-     %{lib:posix-socket:stubs/posix_socket_stubs.cmxa}
-     %{lib:posix-socket:posix_socket.cmxa}
      %{lib-private:srt.constants:srt_constants.cmxa}
      %{lib-private:srt.types:srt_types.cmxa}
      %{lib-private:srt.stubs:srt_stubs.cmxa}
@@ -35,17 +24,12 @@
  (deps
    (:ml ./gen_types_c.ml))
  (action
-   (run %{ocamlopt}
-     -I %{lib:ctypes.stubs:}
-     -I %{lib:integers:}
+   (run ocamlfind ocamlopt
+     -linkpkg
+     -package ctypes.stubs
      -I ../types
      -I ../types/.srt_types.objs/native/
      -I ../types/.srt_types.objs/byte/
-     %{lib:str:str.cmxa}
-     %{lib:integers:integers.cmxa}
-     %{lib:bigarray-compat:bigarray_compat.cmxa}
-     %{lib:ctypes.stubs:ctypes.cmxa}
-     %{lib:ctypes.stubs:cstubs.cmxa}
      %{lib-private:srt.constants:srt_constants.cmxa}
      %{lib-private:srt.types:srt_types.cmxa}
      %{ml} -o %{targets})))
@@ -77,17 +61,12 @@
  (deps
    (:ml gen_constants_c.ml))
  (action
-   (run %{ocamlopt}
-     -I %{lib:ctypes.stubs:}
-     -I %{lib:integers:}
+   (run ocamlfind ocamlopt
+     -linkpkg
+     -package ctypes.stubs
      -I ../constants
      -I ../constants/.srt_constants.objs/native/
      -I ../constants/.srt_constants.objs/byte/
-     %{lib:str:str.cmxa}
-     %{lib:integers:integers.cmxa}
-     %{lib:bigarray-compat:bigarray_compat.cmxa}
-     %{lib:ctypes.stubs:ctypes.cmxa}
-     %{lib:ctypes.stubs:cstubs.cmxa}
      %{lib-private:srt.constants:srt_constants.cmxa}
      %{ml} -o %{targets})))
 
