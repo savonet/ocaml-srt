@@ -55,12 +55,15 @@ module Def (S : Cstubs.Types.TYPE) = struct
     | `Enolisten
     | `Enoserver
     | `Epeererr
+    | `Epollempty
     | `Erdperm
     | `Erdvnoserv
     | `Erdvunbound
     | `Eresource
+    | `Esclosed
     | `Esecfail
     | `Esockfail
+    | `Esysobj
     | `Ethread
     | `Etimeout
     | `Eunboundsock
@@ -117,44 +120,47 @@ module Def (S : Cstubs.Types.TYPE) = struct
   let errno : errno typ =
     enum "SRT_ERRNO"
       [
-        (`Eunknown, constant "SRT_EUNKNOWN" int64_t);
-        (`Success, constant "SRT_SUCCESS" int64_t);
-        (`Econnsetup, constant "SRT_ECONNSETUP" int64_t);
-        (`Enoserver, constant "SRT_ENOSERVER" int64_t);
-        (`Econnrej, constant "SRT_ECONNREJ" int64_t);
-        (`Esockfail, constant "SRT_ESOCKFAIL" int64_t);
-        (`Esecfail, constant "SRT_ESECFAIL" int64_t);
+        (`Easyncfail, constant "SRT_EASYNCFAIL" int64_t);
+        (`Easyncrcv, constant "SRT_EASYNCRCV" int64_t);
+        (`Easyncsnd, constant "SRT_EASYNCSND" int64_t);
+        (`Eboundsock, constant "SRT_EBOUNDSOCK" int64_t);
+        (`Econgest, constant "SRT_ECONGEST" int64_t);
         (`Econnfail, constant "SRT_ECONNFAIL" int64_t);
         (`Econnlost, constant "SRT_ECONNLOST" int64_t);
-        (`Enoconn, constant "SRT_ENOCONN" int64_t);
-        (`Eresource, constant "SRT_ERESOURCE" int64_t);
-        (`Ethread, constant "SRT_ETHREAD" int64_t);
-        (`Enobuf, constant "SRT_ENOBUF" int64_t);
-        (`Efile, constant "SRT_EFILE" int64_t);
-        (`Einvrdoff, constant "SRT_EINVRDOFF" int64_t);
-        (`Erdperm, constant "SRT_ERDPERM" int64_t);
-        (`Einvwroff, constant "SRT_EINVWROFF" int64_t);
-        (`Ewrperm, constant "SRT_EWRPERM" int64_t);
-        (`Einvop, constant "SRT_EINVOP" int64_t);
-        (`Eboundsock, constant "SRT_EBOUNDSOCK" int64_t);
+        (`Econnrej, constant "SRT_ECONNREJ" int64_t);
+        (`Econnsetup, constant "SRT_ECONNSETUP" int64_t);
         (`Econnsock, constant "SRT_ECONNSOCK" int64_t);
+        (`Eduplisten, constant "SRT_EDUPLISTEN" int64_t);
+        (`Efile, constant "SRT_EFILE" int64_t);
+        (`Einvalbufferapi, constant "SRT_EINVALBUFFERAPI" int64_t);
+        (`Einvalmsgapi, constant "SRT_EINVALMSGAPI" int64_t);
+        (`Einvop, constant "SRT_EINVOP" int64_t);
         (`Einvparam, constant "SRT_EINVPARAM" int64_t);
+        (`Einvpollid, constant "SRT_EINVPOLLID" int64_t);
+        (`Einvrdoff, constant "SRT_EINVRDOFF" int64_t);
         (`Einvsock, constant "SRT_EINVSOCK" int64_t);
-        (`Eunboundsock, constant "SRT_EUNBOUNDSOCK" int64_t);
+        (`Einvwroff, constant "SRT_EINVWROFF" int64_t);
+        (`Elargemsg, constant "SRT_ELARGEMSG" int64_t);
+        (`Enobuf, constant "SRT_ENOBUF" int64_t);
+        (`Enoconn, constant "SRT_ENOCONN" int64_t);
         (`Enolisten, constant "SRT_ENOLISTEN" int64_t);
+        (`Enoserver, constant "SRT_ENOSERVER" int64_t);
+        (`Epeererr, constant "SRT_EPEERERR" int64_t);
+        (`Epollempty, constant "SRT_EPOLLEMPTY" int64_t);
+        (`Erdperm, constant "SRT_ERDPERM" int64_t);
         (`Erdvnoserv, constant "SRT_ERDVNOSERV" int64_t);
         (`Erdvunbound, constant "SRT_ERDVUNBOUND" int64_t);
-        (`Einvalmsgapi, constant "SRT_EINVALMSGAPI" int64_t);
-        (`Einvalbufferapi, constant "SRT_EINVALBUFFERAPI" int64_t);
-        (`Eduplisten, constant "SRT_EDUPLISTEN" int64_t);
-        (`Elargemsg, constant "SRT_ELARGEMSG" int64_t);
-        (`Einvpollid, constant "SRT_EINVPOLLID" int64_t);
-        (`Easyncfail, constant "SRT_EASYNCFAIL" int64_t);
-        (`Easyncsnd, constant "SRT_EASYNCSND" int64_t);
-        (`Easyncrcv, constant "SRT_EASYNCRCV" int64_t);
+        (`Eresource, constant "SRT_ERESOURCE" int64_t);
+        (`Esclosed, constant "SRT_ESCLOSED" int64_t);
+        (`Esecfail, constant "SRT_ESECFAIL" int64_t);
+        (`Esockfail, constant "SRT_ESOCKFAIL" int64_t);
+        (`Esysobj, constant "SRT_ESYSOBJ" int64_t);
+        (`Ethread, constant "SRT_ETHREAD" int64_t);
         (`Etimeout, constant "SRT_ETIMEOUT" int64_t);
-        (`Econgest, constant "SRT_ECONGEST" int64_t);
-        (`Epeererr, constant "SRT_EPEERERR" int64_t);
+        (`Eunboundsock, constant "SRT_EUNBOUNDSOCK" int64_t);
+        (`Eunknown, constant "SRT_EUNKNOWN" int64_t);
+        (`Ewrperm, constant "SRT_EWRPERM" int64_t);
+        (`Success, constant "SRT_SUCCESS" int64_t);
       ]
 
   let srt_epoll_in = constant "SRT_EPOLL_IN" int64_t

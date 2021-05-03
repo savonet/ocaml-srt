@@ -77,12 +77,15 @@ type errno =
   | `Enolisten
   | `Enoserver
   | `Epeererr
+  | `Epollempty
   | `Erdperm
   | `Erdvnoserv
   | `Erdvunbound
   | `Eresource
+  | `Esclosed
   | `Esecfail
   | `Esockfail
+  | `Esysobj
   | `Ethread
   | `Etimeout
   | `Eunboundsock
