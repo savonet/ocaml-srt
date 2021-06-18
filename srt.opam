@@ -14,8 +14,10 @@ license: "GPL-2.0"
 homepage: "https://github.com/savonet/ocaml-srt"
 bug-reports: "https://github.com/savonet/ocaml-srt/issues"
 depends: [
+  "conf-srt" {build}
+  "conf-pkg-config" {build}
   "dune" {> "2.0"}
-  "dune-configurator"
+  "dune-configurator" {build}
   "ctypes"
   "integers"
   "posix-socket"
@@ -35,11 +37,3 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/savonet/ocaml-srt.git"
-depexts: [
-  ["srt-devel"] {os-distribution = "centos"}
-  ["srt-devel"] {os-distribution = "fedora"}
-  ["srt-devel"] {os-family = "suse"}
-  ["libsrt-gnutls-dev" "libgnutls28-dev"] {os-distribution = "debian"}
-  ["libsrt-dev"] {os-distribution = "ubuntu"}
-  ["srt"] {os = "macos" & os-distribution = "homebrew"}
-]

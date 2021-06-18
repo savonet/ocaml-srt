@@ -1,4 +1,4 @@
-0.2.0 (unreleased)
+0.2.0 (2021-06-18)
 =====
 * Added support for uwait polling.
 * Added support for stats.

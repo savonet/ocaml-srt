@@ -17,8 +17,10 @@
               "\| This package provides OCaml bindings to the C implementation library.
  )
  (depends
+  (conf-srt :build)
+  (conf-pkg-config :build)
   (dune (> 2.0))
-  dune-configurator
+  (dune-configurator :build)
   ctypes
   integers
   posix-socket)
