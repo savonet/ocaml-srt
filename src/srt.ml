@@ -80,6 +80,8 @@ type 'a socket_opt =
   | `Transtype
   | `Rcvsyn
   | `Sndsyn
+  | `Rcvtimeo
+  | `Sndtimeo
   | `Reuseaddr
   | `Rcvbuf
   | `Sndbuf
@@ -92,6 +94,8 @@ let payloadsize = `Payloadsize
 let transtype = `Transtype
 let rcvsyn = `Rcvsyn
 let sndsyn = `Sndsyn
+let rcvtimeo = `Rcvtimeo
+let sndtimeo = `Sndtimeo
 let reuseaddr = `Reuseaddr
 let rcvbuf = `Rcvbuf
 let sndbuf = `Sndbuf
@@ -166,7 +170,7 @@ let getsockflag sock opt =
   match opt with
     | `Enforced_encryption | `Rcvsyn | `Sndsyn | `Reuseaddr | `Messageapi ->
         Obj.magic (arg <> 0)
-    | `Rcvbuf | `Sndbuf | `Udp_rcvbuf | `Udp_sndbuf | `Payloadsize ->
+    | `Rcvtimeo | `Sndtimeo | `Rcvbuf | `Sndbuf | `Udp_rcvbuf | `Udp_sndbuf | `Payloadsize ->
         Obj.magic arg
     | `Transtype -> Obj.magic (transtype_of_int arg)
 
@@ -177,7 +181,7 @@ let setsockflag sock opt v =
       | `Enforced_encryption | `Rcvsyn | `Sndsyn | `Reuseaddr | `Messageapi ->
           let v = if Obj.magic v then 1 else 0 in
           (f int v, sizeof int)
-      | `Rcvbuf | `Sndbuf | `Udp_rcvbuf | `Udp_sndbuf | `Payloadsize ->
+      | `Rcvtimeo | `Sndtimeo | `Rcvbuf | `Sndbuf | `Udp_rcvbuf | `Udp_sndbuf | `Payloadsize ->
           let v = Obj.magic v in
           (f int v, sizeof int)
       | `Transtype ->

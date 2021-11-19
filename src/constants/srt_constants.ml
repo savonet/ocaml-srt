@@ -18,6 +18,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
     | `Transtype
     | `Rcvsyn
     | `Sndsyn
+    | `Rcvtimeo
+    | `Sndtimeo
     | `Reuseaddr
     | `Rcvbuf
     | `Sndbuf
@@ -95,6 +97,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
         (`Transtype, constant "SRTO_TRANSTYPE" int64_t);
         (`Rcvsyn, constant "SRTO_RCVSYN" int64_t);
         (`Sndsyn, constant "SRTO_SNDSYN" int64_t);
+        (`Rcvtimeo, constant "SRTO_RCVTIMEO" int64_t);
+        (`Sndtimeo, constant "SRTO_SNDTIMEO" int64_t);
         (`Reuseaddr, constant "SRTO_REUSEADDR" int64_t);
         (`Rcvbuf, constant "SRTO_RCVBUF" int64_t);
         (`Sndbuf, constant "SRTO_SNDBUF" int64_t);

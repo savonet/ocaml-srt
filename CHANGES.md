@@ -1,3 +1,7 @@
+0.2.1 (unreleased)
+=====
+* Added support for rcn/sndtimeo.
+
 0.2.0 (2021-06-18)
 =====
 * Added support for uwait polling.
