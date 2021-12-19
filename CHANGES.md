@@ -1,6 +1,6 @@
 0.2.1 (unreleased)
 =====
-* Added support for rcn/sndtimeo.
+* Added support for conn/rcn/sndtimeo.
 
 0.2.0 (2021-06-18)
 =====

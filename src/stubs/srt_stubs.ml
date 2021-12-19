@@ -31,8 +31,8 @@ module Def (F : Cstubs.FOREIGN) = struct
 
   let rendez_vous =
     foreign "srt_rendezvous"
-      ( int @-> ptr sockaddr_t @-> int @-> ptr sockaddr_t @-> int
-      @-> returning int )
+      (int @-> ptr sockaddr_t @-> int @-> ptr sockaddr_t @-> int
+     @-> returning int)
 
   let send = foreign "srt_send" (int @-> string @-> int @-> returning int)
   let recv = foreign "srt_recv" (int @-> ptr char @-> int @-> returning int)
@@ -72,8 +72,8 @@ module Def (F : Cstubs.FOREIGN) = struct
 
   let epoll_wait =
     foreign "srt_epoll_wait"
-      ( int @-> ptr int @-> ptr int @-> ptr int @-> ptr int @-> int64_t
-      @-> ptr void @-> ptr void @-> ptr void @-> ptr void @-> returning int )
+      (int @-> ptr int @-> ptr int @-> ptr int @-> ptr int @-> int64_t
+     @-> ptr void @-> ptr void @-> ptr void @-> ptr void @-> returning int)
 
   let epoll_release = foreign "srt_epoll_release" (int @-> returning int)
 

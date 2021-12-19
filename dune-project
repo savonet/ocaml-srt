@@ -1,4 +1,4 @@
-(lang dune 2.1)
+(lang dune 2.8)
 (version 0.2.1)
 (name srt)
 (source (github savonet/ocaml-srt))
@@ -7,6 +7,7 @@
 (maintainers "The Savonet Team <savonet-users@lists.sourceforge.net>")
 
 (generate_opam_files true)
+(use_standard_c_and_cxx_flags false)
 
 (package
  (name srt)
@@ -19,7 +20,7 @@
  (depends
   (conf-srt :build)
   (conf-pkg-config :build)
-  (dune (> 2.0))
+  dune
   (dune-configurator :build)
   ctypes
   integers

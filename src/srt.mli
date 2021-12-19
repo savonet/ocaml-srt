@@ -43,6 +43,7 @@ val payloadsize : int socket_opt
 val transtype : transtype socket_opt
 val rcvsyn : bool socket_opt
 val sndsyn : bool socket_opt
+val conntimeo : int socket_opt
 val rcvtimeo : int socket_opt
 val sndtimeo : int socket_opt
 val reuseaddr : bool socket_opt
