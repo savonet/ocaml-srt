@@ -1,4 +1,4 @@
-0.2.1 (unreleased)
+0.2.1 (2022-01-02)
 =====
 * Added support for conn/rcn/sndtimeo.
 
