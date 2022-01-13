@@ -295,28 +295,37 @@ module Log = struct
 
   let setloglevel lvl = setloglevel (int_of_level lvl)
 
-  external ocaml_srt_register_log_handler :
-    (int -> string -> int -> string -> string -> unit) -> unit
-    = "ocaml_srt_register_log_handler"
-
-  external ocaml_srt_clear_log_handler : unit -> unit
-    = "ocaml_srt_clear_log_handler"
+  external setup_log_callback : unit -> unit = "ocaml_srt_setup_log_callback"
     [@@noalloc]
 
-  let log_ref = Root.create ()
+  external process_log : (msg -> unit) -> unit = "ocaml_srt_process_log"
 
-  let set_handler h =
-    let h level file line area message =
-      try h { level; file; line; area; message }
-      with exn ->
-        Printf.fprintf stdout "Error while trying to print srt log: %s\n%!"
-          (Printexc.to_string exn)
-    in
-    ocaml_srt_register_log_handler h
+  let log_fn = ref (fun _ -> ())
+  let log_fn_m = Mutex.create ()
+
+  let mutexify fn x =
+    Mutex.lock log_fn_m;
+    try
+      fn x;
+      Mutex.unlock log_fn_m
+    with exn ->
+      let bt = Printexc.get_raw_backtrace () in
+      Mutex.unlock log_fn_m;
+      Printexc.raise_with_backtrace exn bt
+
+  let set_handler fn =
+    setup_log_callback ();
+    mutexify (fun () -> log_fn := fn) ()
+
+  external clear_callback : unit -> unit = "ocaml_srt_clear_log_callback"
+    [@@noalloc]
 
   let clear_handler () =
-    ocaml_srt_clear_log_handler ();
-    Root.set log_ref ()
+    clear_callback ();
+    mutexify (fun () -> log_fn := fun _ -> ()) ()
+
+  let () =
+    ignore (Thread.create (fun () -> process_log (fun msg -> !log_fn msg)) ())
 end
 
 module Stats = struct

@@ -1,3 +1,8 @@
+0.2.2 (unreleased)
+=====
+* Reimplement log handler to be non-blocking and
+  outside of the OCaml heap.
+
 0.2.1 (2022-01-02)
 =====
 * Added support for conn/rcn/sndtimeo.

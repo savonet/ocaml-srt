@@ -9,71 +9,92 @@ let c_headers =
 #include <srt/srt.h>
 #include <stdio.h>
 
-static pthread_key_t ocaml_c_thread_key;
-static pthread_once_t ocaml_c_thread_key_once = PTHREAD_ONCE_INIT;
+#define MAX_LOG_STRING 1024
 
-static void ocaml_srt_on_thread_exit(void *key) { caml_c_thread_unregister(); }
+typedef struct {
+  int level;
+  char file[MAX_LOG_STRING];
+  int line;
+  char area[MAX_LOG_STRING];
+  char message[MAX_LOG_STRING];
+  void *next;
+} log_msg_t;
 
-static void ocaml_srt_make_key() {
-  pthread_key_create(&ocaml_c_thread_key, ocaml_srt_on_thread_exit);
+static pthread_cond_t log_condition = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t log_mutex = PTHREAD_MUTEX_INITIALIZER;
+static log_msg_t top_level_log_msg = {0, "", 0, "", "", NULL};
+
+CAMLprim value ocaml_srt_process_log(value cb) {
+  CAMLparam1(cb);
+  CAMLlocal1(payload);
+  log_msg_t *log_msg, *next_log_msg;
+
+  while (1) {
+    caml_release_runtime_system();
+    pthread_mutex_lock(&log_mutex);
+
+    while (top_level_log_msg.next == NULL)
+      pthread_cond_wait(&log_condition, &log_mutex);
+
+    log_msg = top_level_log_msg.next;
+    top_level_log_msg.next = NULL;
+    pthread_mutex_unlock(&log_mutex);
+
+    caml_acquire_runtime_system();
+
+    while (log_msg != NULL) {
+      payload = caml_alloc_tuple(5);
+      Store_field(payload, 0, Val_int(log_msg->level));
+      Store_field(payload, 1, caml_alloc_initialized_string(strnlen(log_msg->file, MAX_LOG_STRING), log_msg->file));
+      Store_field(payload, 2, Val_int(log_msg->line)); 
+      Store_field(payload, 3, caml_alloc_initialized_string(strnlen(log_msg->area, MAX_LOG_STRING), log_msg->area));
+      Store_field(payload, 4, caml_alloc_initialized_string(strnlen(log_msg->message, MAX_LOG_STRING), log_msg->message));
+
+      caml_callback(cb, payload);
+
+      next_log_msg = log_msg->next;
+      free(log_msg);
+      log_msg = next_log_msg;
+    }
+  }
+
+  CAMLreturn(Val_unit);
 }
-
-void ocaml_srt_register_thread() {
-  static int initialized = 1;
-  void *ptr;
-  pthread_once(&ocaml_c_thread_key_once, ocaml_srt_make_key);
-  if (caml_c_thread_register() && !pthread_getspecific(ocaml_c_thread_key))
-    pthread_setspecific(ocaml_c_thread_key, (void *)&initialized);
-}
-
-static value log_handler = (value)NULL;
 
 void ocaml_srt_log_handler(void *opaque, int level, const char *file, int line,
                            const char *area, const char *message) {
-  value _file, _area, _message, _ret;
-  value _args[5];
-  int nargs = 5;
+  pthread_mutex_lock(&log_mutex);
 
-  ocaml_srt_register_thread();
-  caml_acquire_runtime_system();
+  log_msg_t *log_msg = &top_level_log_msg;
 
-  _args[0] = Val_int(level);
-  _file = caml_copy_string(file);
+  while (log_msg->next != NULL) {
+    log_msg = log_msg->next;
+  }
 
-  caml_register_generational_global_root(&_file);
+  // TODO: check for NULL here
+  log_msg->next = malloc(sizeof(log_msg_t));
 
-  _args[1] = _file;
-  _args[2] = Val_int(line);
-  _area = caml_copy_string(area);
+  log_msg = (log_msg_t *)log_msg->next;
+  log_msg->next = NULL;
 
-  caml_register_generational_global_root(&_area);
+  log_msg->level = level;
+  memcpy(log_msg->file, file, strnlen(file, MAX_LOG_STRING));
+  log_msg->line -= line;
+  memcpy(log_msg->area, message, strnlen(area, MAX_LOG_STRING));
+  memcpy(log_msg->message, message, strnlen(message, MAX_LOG_STRING));
 
-  _args[3] = _area;
-  _message = caml_copy_string(message);
-
-  caml_register_generational_global_root(&_message);
-
-  _args[4] = _message;
-  _ret = caml_callbackN(log_handler, nargs, _args);
-
-  caml_remove_generational_global_root(&_file);
-  caml_remove_generational_global_root(&_area);
-  caml_remove_generational_global_root(&_message);
-  caml_release_runtime_system();
+  pthread_cond_signal(&log_condition);
+  pthread_mutex_unlock(&log_mutex);
 }
 
-value ocaml_srt_clear_log_handler(value unit) {
-  srt_setloghandler(NULL, NULL);
-  caml_remove_generational_global_root(&log_handler);
+CAMLprim value ocaml_srt_setup_log_callback(value unit) {
+  srt_setloghandler(NULL, &ocaml_srt_log_handler); 
   return Val_unit;
 }
 
-CAMLprim value ocaml_srt_register_log_handler(value handler) {
-  CAMLparam1(handler);
-  log_handler = handler;
-  caml_register_generational_global_root(&log_handler);
-  srt_setloghandler(NULL, &ocaml_srt_log_handler);
-  CAMLreturn(Val_unit);
+CAMLprim value ocaml_srt_clear_log_callback() {
+  srt_setloghandler(NULL, NULL);
+  return Val_unit;
 }
 |}
 
