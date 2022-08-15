@@ -14,7 +14,13 @@
  (c_library_flags
   (:include c_library_flags.sexp))
  (synopsis "Binding for the Secure, Reliable, Transport protocol library")
- (libraries threads integers srt.stubs srt.stubs.locked ctypes.stubs))
+ (libraries
+  threads
+  integers
+  srt.stubs
+  srt.stubs.locked
+  ctypes.stubs
+  ctypes.foreign))
 
 (rule
  (targets c_flags.sexp c_library_flags.sexp)

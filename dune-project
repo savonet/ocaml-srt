@@ -23,6 +23,7 @@
   dune
   (dune-configurator :build)
   ctypes
+  ctypes-foreign
   integers
   posix-socket)
 )

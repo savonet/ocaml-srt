@@ -37,6 +37,7 @@ type socket_status =
 
 type transtype = [ `Live | `File | `Invalid ]
 type 'a socket_opt
+type listen_callback = socket -> int -> Unix.sockaddr -> string option -> bool
 
 val messageapi : bool socket_opt
 val payloadsize : int socket_opt
@@ -103,6 +104,7 @@ val cleanup : unit -> unit
 val create_socket : unit -> socket
 val getsockstate : socket -> socket_status
 val bind : socket -> Unix.sockaddr -> unit
+val listen_callback : socket -> listen_callback -> unit
 val listen : socket -> int -> unit
 val accept : socket -> socket * Unix.sockaddr
 val connect : socket -> Unix.sockaddr -> unit
@@ -137,9 +139,9 @@ module Poll : sig
   type event = { fd : socket; events : flag list }
 
   val create : unit -> t
-  val add_usock : t -> socket -> ?flags:flag list -> unit
+  val add_usock : ?flags:flag list -> t -> socket -> unit
   val remove_usock : t -> socket -> unit
-  val update_usock : t -> socket -> ?flags:flag list -> unit
+  val update_usock : ?flags:flag list -> t -> socket -> unit
   val uwait : t -> max_fds:int -> timeout:int -> event list
 
   val wait :

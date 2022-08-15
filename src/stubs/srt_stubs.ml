@@ -3,6 +3,14 @@ open Posix_socket
 
 type socket = int
 
+let const_string = typedef (ptr char) "const char*"
+let const_sockaddr = typedef (ptr sockaddr_t) "const struct sockaddr*"
+
+module ListenCallback =
+(val Foreign.dynamic_funptr ~thread_registration:true ~runtime_lock:true
+       (ptr void @-> int @-> int @-> const_sockaddr @-> const_string
+      @-> returning int))
+
 module Def (F : Cstubs.FOREIGN) = struct
   include Srt_types
   include Srt_types.Def (Srt_generated_types)
@@ -21,7 +29,12 @@ module Def (F : Cstubs.FOREIGN) = struct
   let bind =
     foreign "srt_bind" (int @-> ptr sockaddr_t @-> int @-> returning int)
 
+  let strlen = foreign "strlen" (ptr char @-> returning int)
   let listen = foreign "srt_listen" (int @-> int @-> returning int)
+
+  let listen_callback =
+    foreign "srt_listen_callback"
+      (int @-> ListenCallback.t @-> ptr void @-> returning int)
 
   let accept =
     foreign "srt_accept" (int @-> ptr sockaddr_t @-> ptr int @-> returning int)

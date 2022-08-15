@@ -6,7 +6,7 @@
 (library
  (name srt_stubs)
  (public_name srt.stubs)
- (libraries srt.types ctypes.stubs posix-socket))
+ (libraries srt.types ctypes.foreign ctypes.stubs posix-socket))
 
 (rule
  (targets srt_generated_types.ml)

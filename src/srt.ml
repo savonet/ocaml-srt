@@ -14,6 +14,8 @@ type transtype = Srt.transtype
 type socket_status = Srt.socket_status
 type socket = Srt.socket
 
+let resources = Hashtbl.create 0
+
 let string_of_errno = function
   | `Easyncfail -> "Easyncfail"
   | `Easyncrcv -> "Easyncrcv"
@@ -146,6 +148,27 @@ let rendez_vous socket sockaddr1 sockaddr2 =
           (apply_sockaddr (rendez_vous socket) sockaddr1)
           sockaddr2))
 
+type listen_callback = socket -> int -> Unix.sockaddr -> string option -> bool
+
+let listen_callback sock fn =
+  let fn _ s hs_version peeraddr streamid =
+    let streamid =
+      if is_null streamid then None
+      else Some (string_from_ptr streamid ~length:(strlen streamid))
+    in
+    match fn s hs_version (to_unix_sockaddr peeraddr) streamid with
+      | true -> 0
+      | false | (exception _) -> -1
+  in
+  let ptr = Srt_stubs.ListenCallback.of_fun fn in
+  let cleanup () = Srt_stubs.ListenCallback.free ptr in
+  (try ignore (check_err (listen_callback sock ptr null))
+   with exn ->
+     let bt = Printexc.get_raw_backtrace () in
+     cleanup ();
+     Printexc.raise_with_backtrace exn bt);
+  Hashtbl.add resources sock cleanup
+
 let listen sock backlog = ignore (check_err (listen sock backlog))
 
 let send sock msg =
@@ -194,7 +217,11 @@ let setsockflag sock opt v =
   in
   ignore (check_err (setsockflag sock opt arg arglen))
 
-let close s = ignore (check_err (close s))
+let close s =
+  ignore (check_err (close s));
+  List.iter (fun fn -> fn ()) (Hashtbl.find_all resources s);
+  Hashtbl.remove resources s
+
 let getsockstate = getsockstate
 let create_socket = create_socket
 let cleanup = cleanup
@@ -207,7 +234,7 @@ module Poll = struct
 
   let create = epoll_create
 
-  let add_usock eid s ?flags =
+  let add_usock ?flags eid s =
     let flags =
       match flags with
         | None -> Ctypes.(from_voidp int null)
@@ -223,7 +250,7 @@ module Poll = struct
 
   let remove_usock eid s = ignore (check_err (epoll_remove_usock eid s))
 
-  let update_usock eid s ?flags =
+  let update_usock ?flags eid s =
     let flags =
       match flags with
         | None -> Ctypes.(from_voidp int null)

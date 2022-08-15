@@ -1,7 +1,7 @@
 (library
  (name srt_types)
  (public_name srt.types)
- (libraries ctypes.stubs srt.constants))
+ (libraries posix-socket ctypes.stubs srt.constants))
 
 (rule
  (targets srt_generated_constants.ml)
