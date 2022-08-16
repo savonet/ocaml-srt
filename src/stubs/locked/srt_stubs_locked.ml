@@ -7,5 +7,5 @@ module Def (F : Cstubs.FOREIGN) = struct
     foreign "memcpy" (ocaml_bytes @-> ptr char @-> int @-> returning void)
 
   let memcpy_str =
-    foreign "memcpy" (ocaml_string @-> ptr char @-> int @-> returning void)
+    foreign "memcpy" (ptr char @-> ocaml_string @-> int @-> returning void)
 end

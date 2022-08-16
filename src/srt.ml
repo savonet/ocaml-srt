@@ -259,7 +259,7 @@ let setsockflag : type a. socket -> a socket_opt -> a -> unit =
   let of_string v =
     let len = String.length v in
     let ptr = allocate_n char ~count:len in
-    memcpy_str (ocaml_string_start v) ptr len;
+    memcpy_str ptr (ocaml_string_start v) len;
     (to_voidp ptr, len)
   in
   let arg, arglen =
