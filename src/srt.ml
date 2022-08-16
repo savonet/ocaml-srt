@@ -90,7 +90,10 @@ type 'a socket_opt =
   | `Sndbuf
   | `Udp_rcvbuf
   | `Udp_sndbuf
-  | `Enforced_encryption ]
+  | `Enforced_encryption
+  | `Passphrase
+  | `Pbkeylen
+  | `Streamid ]
 
 let messageapi = `Messageapi
 let payloadsize = `Payloadsize
@@ -106,6 +109,9 @@ let sndbuf = `Sndbuf
 let udp_rcvbuf = `Udp_rcvbuf
 let udp_sndbuf = `Udp_sndbuf
 let enforced_encryption = `Enforced_encryption
+let passphrase = `Passphrase
+let pbkeylen = `Pbkeylen
+let streamid = `Streamid
 let srtt_live = Int64.to_int srtt_live
 let srtt_file = Int64.to_int srtt_file
 let srtt_invalid = Int64.to_int srtt_invalid
@@ -191,16 +197,19 @@ let getsockflag sock opt =
   let arg = allocate int 0 in
   let arglen = allocate int (sizeof int) in
   ignore (check_err (getsockflag sock opt (to_voidp arg) arglen));
-  let arg = !@arg in
   match opt with
     | `Enforced_encryption | `Rcvsyn | `Sndsyn | `Reuseaddr | `Messageapi ->
-        Obj.magic (arg <> 0)
+        Obj.magic (!@arg <> 0)
     | `Conntimeo | `Rcvtimeo | `Sndtimeo | `Rcvbuf | `Sndbuf | `Udp_rcvbuf
-    | `Udp_sndbuf | `Payloadsize ->
-        Obj.magic arg
-    | `Transtype -> Obj.magic (transtype_of_int arg)
+    | `Pbkeylen | `Udp_sndbuf | `Payloadsize ->
+        Obj.magic !@arg
+    | `Transtype -> Obj.magic (transtype_of_int !@arg)
+    | `Passphrase | `Streamid ->
+        let arg = coerce (ptr int) (ptr char) arg in
+        Obj.magic (string_from_ptr arg ~length:!@arglen)
 
-let setsockflag sock opt v =
+let setsockflag (type a) : socket -> a socket_opt -> a -> unit =
+ fun sock opt v ->
   let f t v = to_voidp (allocate t v) in
   let arg, arglen =
     match opt with
@@ -208,12 +217,17 @@ let setsockflag sock opt v =
           let v = if Obj.magic v then 1 else 0 in
           (f int v, sizeof int)
       | `Conntimeo | `Rcvtimeo | `Sndtimeo | `Rcvbuf | `Sndbuf | `Udp_rcvbuf
-      | `Udp_sndbuf | `Payloadsize ->
-          let v = Obj.magic v in
-          (f int v, sizeof int)
+      | `Pbkeylen | `Udp_sndbuf | `Payloadsize ->
+          (f int (Obj.magic v), sizeof int)
       | `Transtype ->
           let transtype = int_of_transtype (Obj.magic v) in
           (f int transtype, sizeof int)
+      | `Passphrase | `Streamid ->
+          let v = Obj.magic v in
+          let len = String.length v in
+          let ptr = allocate_n char ~count:len in
+          memcpy_str (ocaml_string_start v) ptr len;
+          (to_voidp ptr, len)
   in
   ignore (check_err (setsockflag sock opt arg arglen))
 

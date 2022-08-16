@@ -2,7 +2,8 @@
 =====
 * Reimplement log handler to be non-blocking and
   outside of the OCaml heap.
-* Add `listen_callback` API
+* Added `listen_callback` API
+* Added `pbkeylen`, `passphrase` and `streamid` socket options.
 
 0.2.1 (2022-01-02)
 =====

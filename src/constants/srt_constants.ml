@@ -26,7 +26,10 @@ module Def (S : Cstubs.Types.TYPE) = struct
     | `Sndbuf
     | `Udp_rcvbuf
     | `Udp_sndbuf
-    | `Enforced_encryption ]
+    | `Enforced_encryption
+    | `Pbkeylen
+    | `Passphrase
+    | `Streamid ]
 
   type transtype = [ `Live | `File | `Invalid ]
   type poll_flag = [ `Read | `Write | `Error ]
@@ -107,6 +110,9 @@ module Def (S : Cstubs.Types.TYPE) = struct
         (`Udp_rcvbuf, constant "SRTO_UDP_RCVBUF" int64_t);
         (`Udp_sndbuf, constant "SRTO_UDP_SNDBUF" int64_t);
         (`Enforced_encryption, constant "SRTO_ENFORCEDENCRYPTION" int64_t);
+        (`Passphrase, constant "SRTO_PASSPHRASE" int64_t);
+        (`Pbkeylen, constant "SRTO_PBKEYLEN" int64_t);
+        (`Streamid, constant "SRTO_STREAMID" int64_t);
       ]
 
   let srtt_live = constant "SRTT_LIVE" int64_t

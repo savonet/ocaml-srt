@@ -53,6 +53,9 @@ val sndbuf : int socket_opt
 val udp_rcvbuf : int socket_opt
 val udp_sndbuf : int socket_opt
 val enforced_encryption : bool socket_opt
+val streamid : string socket_opt
+val passphrase : string socket_opt
+val pbkeylen : int socket_opt
 
 type errno =
   [ `Easyncfail
