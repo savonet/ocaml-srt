@@ -18,6 +18,7 @@ fi
 ocamlfind ${TOOLCHAIN} ocamlopt \
   -linkpkg \
   -package ctypes.stubs \
+  -package ctypes.foreign \
   -package posix-socket \
   -I ../stubs \
   -I ../stubs/.srt_stubs.objs/native/ \

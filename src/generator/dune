@@ -22,7 +22,6 @@
    ../stubs/locked/.srt_stubs_locked.objs/native/
    -I
    ../stubs/locked/.srt_stubs_locked.objs/byte/
-   %{lib:ctypes.foreign:ctypes-foreign.cmxa}
    %{lib-private:srt.constants:srt_constants.cmxa}
    %{lib-private:srt.types:srt_types.cmxa}
    %{lib-private:srt.stubs:srt_stubs.cmxa}
