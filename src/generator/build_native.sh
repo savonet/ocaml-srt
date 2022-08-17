@@ -18,7 +18,6 @@ fi
 ocamlfind ${TOOLCHAIN} ocamlopt \
   -linkpkg \
   -thread \
-  -package threads \
   -package ctypes.stubs \
   -package ctypes.foreign \
   -package posix-socket \
