@@ -1,4 +1,4 @@
-0.2.2 (unreleased)
+0.2.2 (2022-09-21)
 =====
 * Reimplement log handler to be non-blocking and
   outside of the OCaml heap.
