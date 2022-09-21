@@ -36,26 +36,28 @@ type socket_status =
   | `Nonexist ]
 
 type transtype = [ `Live | `File | `Invalid ]
-type 'a socket_opt
+type ('a, 'b) socket_opt
 type listen_callback = socket -> int -> Unix.sockaddr -> string option -> bool
 
-val messageapi : bool socket_opt
-val payloadsize : int socket_opt
-val transtype : transtype socket_opt
-val rcvsyn : bool socket_opt
-val sndsyn : bool socket_opt
-val conntimeo : int socket_opt
-val rcvtimeo : int socket_opt
-val sndtimeo : int socket_opt
-val reuseaddr : bool socket_opt
-val rcvbuf : int socket_opt
-val sndbuf : int socket_opt
-val udp_rcvbuf : int socket_opt
-val udp_sndbuf : int socket_opt
-val enforced_encryption : bool socket_opt
-val streamid : string socket_opt
-val passphrase : string socket_opt
-val pbkeylen : int socket_opt
+val messageapi : ([ `Write ], bool) socket_opt
+val payloadsize : ([ `Write ], int) socket_opt
+val transtype : ([ `Write ], transtype) socket_opt
+val rcvsyn : ([ `Read | `Write ], bool) socket_opt
+val sndsyn : ([ `Read | `Write ], bool) socket_opt
+val conntimeo : ([ `Write ], int) socket_opt
+val rcvtimeo : ([ `Read | `Write ], int) socket_opt
+val sndtimeo : ([ `Read | `Write ], int) socket_opt
+val reuseaddr : ([ `Read | `Write ], bool) socket_opt
+val rcvbuf : ([ `Read | `Write ], int) socket_opt
+val sndbuf : ([ `Read | `Write ], int) socket_opt
+val udp_rcvbuf : ([ `Read | `Write ], int) socket_opt
+val udp_sndbuf : ([ `Read | `Write ], int) socket_opt
+val rcvdata : ([ `Read ], int) socket_opt
+val rcvlatency : ([ `Read | `Write ], int) socket_opt
+val enforced_encryption : ([ `Write ], bool) socket_opt
+val streamid : ([ `Read | `Write ], string) socket_opt
+val passphrase : ([ `Write ], string) socket_opt
+val pbkeylen : ([ `Read | `Write ], int) socket_opt
 
 type errno =
   [ `Easyncfail
@@ -116,8 +118,8 @@ val send : socket -> bytes -> int
 val recv : socket -> bytes -> int -> int
 val sendmsg : socket -> bytes -> int -> bool -> int
 val recvmsg : socket -> bytes -> int -> int
-val getsockflag : socket -> 'a socket_opt -> 'a
-val setsockflag : socket -> 'a socket_opt -> 'a -> unit
+val getsockflag : socket -> ([> `Read ], 'a) socket_opt -> 'a
+val setsockflag : socket -> ([> `Write ], 'a) socket_opt -> 'a -> unit
 val close : socket -> unit
 
 module Log : sig

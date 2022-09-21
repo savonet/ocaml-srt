@@ -76,24 +76,26 @@ let check_err ret =
   end;
   ret
 
-type _ socket_opt =
-  | Messageapi : bool socket_opt
-  | Payloadsize : int socket_opt
-  | Transtype : transtype socket_opt
-  | Rcvsyn : bool socket_opt
-  | Sndsyn : bool socket_opt
-  | Conntimeo : int socket_opt
-  | Rcvtimeo : int socket_opt
-  | Sndtimeo : int socket_opt
-  | Reuseaddr : bool socket_opt
-  | Rcvbuf : int socket_opt
-  | Sndbuf : int socket_opt
-  | Udp_rcvbuf : int socket_opt
-  | Udp_sndbuf : int socket_opt
-  | Enforced_encryption : bool socket_opt
-  | Passphrase : string socket_opt
-  | Pbkeylen : int socket_opt
-  | Streamid : string socket_opt
+type (_, _) socket_opt =
+  | Messageapi : ([ `Write ], bool) socket_opt
+  | Payloadsize : ([ `Write ], int) socket_opt
+  | Transtype : ([ `Write ], transtype) socket_opt
+  | Rcvsyn : ([ `Read | `Write ], bool) socket_opt
+  | Sndsyn : ([ `Read | `Write ], bool) socket_opt
+  | Conntimeo : ([ `Write ], int) socket_opt
+  | Rcvtimeo : ([ `Read | `Write ], int) socket_opt
+  | Sndtimeo : ([ `Read | `Write ], int) socket_opt
+  | Reuseaddr : ([ `Read | `Write ], bool) socket_opt
+  | Rcvbuf : ([ `Read | `Write ], int) socket_opt
+  | Sndbuf : ([ `Read | `Write ], int) socket_opt
+  | Udp_rcvbuf : ([ `Read | `Write ], int) socket_opt
+  | Udp_sndbuf : ([ `Read | `Write ], int) socket_opt
+  | Rcvdata : ([ `Read ], int) socket_opt
+  | Rcvlatency : ([ `Read | `Write ], int) socket_opt
+  | Enforced_encryption : ([ `Write ], bool) socket_opt
+  | Streamid : ([ `Read | `Write ], string) socket_opt
+  | Passphrase : ([ `Write ], string) socket_opt
+  | Pbkeylen : ([ `Read | `Write ], int) socket_opt
 
 let messageapi = Messageapi
 let payloadsize = Payloadsize
@@ -108,13 +110,15 @@ let rcvbuf = Rcvbuf
 let sndbuf = Sndbuf
 let udp_rcvbuf = Udp_rcvbuf
 let udp_sndbuf = Udp_sndbuf
+let rcvdata = Rcvdata
+let rcvlatency = Rcvlatency
 let enforced_encryption = Enforced_encryption
 let passphrase = Passphrase
 let pbkeylen = Pbkeylen
 let streamid = Streamid
 
-let srt_socket_opt_of_socket_opt (type a) : a socket_opt -> Srt.socket_opt =
-  function
+let srt_socket_opt_of_socket_opt (type a b) :
+    (a, b) socket_opt -> Srt.socket_opt = function
   | Messageapi -> `Messageapi
   | Payloadsize -> `Payloadsize
   | Transtype -> `Transtype
@@ -126,6 +130,8 @@ let srt_socket_opt_of_socket_opt (type a) : a socket_opt -> Srt.socket_opt =
   | Reuseaddr -> `Reuseaddr
   | Rcvbuf -> `Rcvbuf
   | Sndbuf -> `Sndbuf
+  | Rcvdata -> `Rcvdata
+  | Rcvlatency -> `Rcvlatency
   | Udp_rcvbuf -> `Udp_rcvbuf
   | Udp_sndbuf -> `Udp_sndbuf
   | Enforced_encryption -> `Enforced_encryption
@@ -214,7 +220,7 @@ let mk_recv fn sock buf len =
 let recv = mk_recv recv
 let recvmsg = mk_recv recvmsg
 
-let getsockflag : type a. socket -> a socket_opt -> a =
+let getsockflag : type a b. socket -> (a, b) socket_opt -> b =
  fun sock opt ->
   let arg = allocate int 0 in
   let arglen = allocate int (sizeof int) in
@@ -244,11 +250,13 @@ let getsockflag : type a. socket -> a socket_opt -> a =
     | Pbkeylen -> to_int ()
     | Udp_sndbuf -> to_int ()
     | Payloadsize -> to_int ()
+    | Rcvdata -> to_int ()
+    | Rcvlatency -> to_int ()
     | Transtype -> transtype_of_int !@arg
     | Passphrase -> to_string ()
     | Streamid -> to_string ()
 
-let setsockflag : type a. socket -> a socket_opt -> a -> unit =
+let setsockflag : type a b. socket -> (a, b) socket_opt -> b -> unit =
  fun sock opt v ->
   let f t v = to_voidp (allocate t v) in
   let of_bool v =
@@ -278,6 +286,8 @@ let setsockflag : type a. socket -> a socket_opt -> a -> unit =
       | Pbkeylen -> of_int v
       | Udp_sndbuf -> of_int v
       | Payloadsize -> of_int v
+      | Rcvdata -> of_int v
+      | Rcvlatency -> of_int v
       | Transtype ->
           let transtype = int_of_transtype v in
           (f int transtype, sizeof int)

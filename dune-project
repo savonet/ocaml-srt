@@ -1,5 +1,5 @@
 (lang dune 2.8)
-(version 0.2.2)
+(version 0.2.3)
 (name srt)
 (source (github savonet/ocaml-srt))
 (license GPL-2.0)

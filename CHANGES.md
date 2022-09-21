@@ -1,3 +1,7 @@
+0.2.3 (unreleased)
+=====
+* Added `rcvdata` and `rcvlatency`
+
 0.2.2 (2022-09-21)
 =====
 * Reimplement log handler to be non-blocking and

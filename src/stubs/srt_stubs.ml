@@ -7,9 +7,9 @@ let const_string = typedef (ptr char) "const char*"
 let const_sockaddr = typedef (ptr sockaddr_t) "const struct sockaddr*"
 
 module ListenCallback =
-(val Foreign.dynamic_funptr ~thread_registration:true ~runtime_lock:true
-       (ptr void @-> int @-> int @-> const_sockaddr @-> const_string
-      @-> returning int))
+  (val Foreign.dynamic_funptr ~thread_registration:true ~runtime_lock:true
+         (ptr void @-> int @-> int @-> const_sockaddr @-> const_string
+        @-> returning int))
 
 module Def (F : Cstubs.FOREIGN) = struct
   include Srt_types
