@@ -310,6 +310,7 @@ let startup = startup
 module Poll = struct
   type t = int
   type flag = Srt.poll_flag
+  type _event = { _fd : socket; mutable _events : flag list }
   type event = { fd : socket; events : flag list }
 
   let create = epoll_create
@@ -353,19 +354,26 @@ module Poll = struct
       check_err (epoll_uwait eid (CArray.start events) max_fds timeout)
     in
     let events = CArray.to_list (CArray.sub events ~pos:0 ~length:nb_events) in
-    List.map
-      (fun event ->
-        let fd = getf event PollEvent.fd in
-        let events = getf event PollEvent.events in
-        let events =
-          List.fold_left
-            (fun cur flag ->
-              let poll_flag = Int64.to_int (poll_flag_of_flag flag) in
-              if poll_flag land events <> 0 then flag :: cur else cur)
-            [] [`Read; `Write; `Error]
-        in
-        { fd; events })
-      events
+    let events =
+      List.fold_left
+        (fun events event ->
+          let _fd = getf event PollEvent.fd in
+          let _events = getf event PollEvent.events in
+          let _events =
+            List.fold_left
+              (fun cur flag ->
+                let poll_flag = Int64.to_int (poll_flag_of_flag flag) in
+                if poll_flag land _events <> 0 then flag :: cur else cur)
+              [] [`Read; `Write; `Error]
+          in
+          match List.find_opt (fun s -> s._fd = _fd) events with
+            | Some e ->
+                e._events <- List.sort_uniq Stdlib.compare (_events @ e._events);
+                events
+            | None -> { _fd; _events } :: events)
+        [] events
+    in
+    List.map (fun { _fd = fd; _events = events } -> { fd; events }) events
 
   let wait eid ~max_read ~max_write ~timeout =
     let timeout = Int64.of_int timeout in
@@ -377,8 +385,14 @@ module Poll = struct
       (check_err
          (epoll_wait eid (CArray.start read) read_len (CArray.start write)
             write_len timeout null null null null));
-    let read = CArray.to_list (CArray.sub read ~pos:0 ~length:!@read_len) in
-    let write = CArray.to_list (CArray.sub write ~pos:0 ~length:!@write_len) in
+    let read =
+      List.sort_uniq Stdlib.compare
+        (CArray.to_list (CArray.sub read ~pos:0 ~length:!@read_len))
+    in
+    let write =
+      List.sort_uniq Stdlib.compare
+        (CArray.to_list (CArray.sub write ~pos:0 ~length:!@write_len))
+    in
     (read, write)
 end
 
