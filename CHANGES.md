@@ -2,6 +2,7 @@
 =====
 * Added `rcvdata` and `rcvlatency`
 * Added read/write constraints to socket options.
+* Remove `max_*` arguments in polling functions.
 
 0.2.2 (2022-09-21)
 =====

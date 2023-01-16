@@ -307,15 +307,22 @@ let create_socket = create_socket
 let cleanup = cleanup
 let startup = startup
 
+module SocketSet = Set.Make (struct
+  type t = Srt.socket
+
+  let compare = Stdlib.compare
+end)
+
 module Poll = struct
-  type t = int
+  type t = { eid : int; mutable sockets : SocketSet.t }
   type flag = Srt.poll_flag
   type _event = { _fd : socket; mutable _events : flag list }
   type event = { fd : socket; events : flag list }
 
-  let create = epoll_create
+  let create () = { eid = epoll_create (); sockets = SocketSet.empty }
+  let sockets h = SocketSet.elements h.sockets
 
-  let add_usock ?flags eid s =
+  let add_usock ?flags h s =
     let flags =
       match flags with
         | None -> Ctypes.(from_voidp int null)
@@ -327,11 +334,14 @@ module Poll = struct
             in
             allocate Ctypes.int flags
     in
-    ignore (check_err (epoll_add_usock eid s flags))
+    ignore (check_err (epoll_add_usock h.eid s flags));
+    h.sockets <- SocketSet.add s h.sockets
 
-  let remove_usock eid s = ignore (check_err (epoll_remove_usock eid s))
+  let remove_usock h s =
+    ignore (check_err (epoll_remove_usock h.eid s));
+    h.sockets <- SocketSet.remove s h.sockets
 
-  let update_usock ?flags eid s =
+  let update_usock ?flags h s =
     let flags =
       match flags with
         | None -> Ctypes.(from_voidp int null)
@@ -343,15 +353,17 @@ module Poll = struct
             in
             allocate Ctypes.int flags
     in
-    ignore (check_err (epoll_update_usock eid s flags))
+    ignore (check_err (epoll_update_usock h.eid s flags));
+    h.sockets <- SocketSet.remove s h.sockets
 
-  let release eid = ignore (check_err (epoll_release eid))
+  let release h = ignore (check_err (epoll_release h.eid))
 
-  let uwait eid ~max_fds ~timeout =
+  let uwait h ~timeout =
     let timeout = Int64.of_int timeout in
+    let max_fds = 3 * SocketSet.cardinal h.sockets in
     let events = CArray.make PollEvent.t max_fds in
     let nb_events =
-      check_err (epoll_uwait eid (CArray.start events) max_fds timeout)
+      check_err (epoll_uwait h.eid (CArray.start events) max_fds timeout)
     in
     let events = CArray.to_list (CArray.sub events ~pos:0 ~length:nb_events) in
     let events =
@@ -375,15 +387,16 @@ module Poll = struct
     in
     List.map (fun { _fd = fd; _events = events } -> { fd; events }) events
 
-  let wait eid ~max_read ~max_write ~timeout =
+  let wait h ~timeout =
+    let max_fds = SocketSet.cardinal h.sockets in
     let timeout = Int64.of_int timeout in
-    let read_len = allocate int max_read in
-    let read = CArray.make int max_read in
-    let write_len = allocate int max_write in
-    let write = CArray.make int max_write in
+    let read_len = allocate int max_fds in
+    let read = CArray.make int max_fds in
+    let write_len = allocate int max_fds in
+    let write = CArray.make int max_fds in
     ignore
       (check_err
-         (epoll_wait eid (CArray.start read) read_len (CArray.start write)
+         (epoll_wait h.eid (CArray.start read) read_len (CArray.start write)
             write_len timeout null null null null));
     let read =
       List.sort_uniq Stdlib.compare

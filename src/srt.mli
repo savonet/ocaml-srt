@@ -144,18 +144,12 @@ module Poll : sig
   type event = { fd : socket; events : flag list }
 
   val create : unit -> t
+  val sockets : t -> socket list
   val add_usock : ?flags:flag list -> t -> socket -> unit
   val remove_usock : t -> socket -> unit
   val update_usock : ?flags:flag list -> t -> socket -> unit
-  val uwait : t -> max_fds:int -> timeout:int -> event list
-
-  val wait :
-    t ->
-    max_read:int ->
-    max_write:int ->
-    timeout:int ->
-    socket list * socket list
-
+  val uwait : t -> timeout:int -> event list
+  val wait : t -> timeout:int -> socket list * socket list
   val release : t -> unit
 end
 
