@@ -1,4 +1,4 @@
-0.3.0 (unreleased)
+0.3.0 (2022-03-04)
 =====
 * Added `rcvdata` and `rcvlatency`
 * Added read/write constraints to socket options.
