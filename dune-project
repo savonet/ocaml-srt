@@ -2,7 +2,7 @@
 (version 0.3.0)
 (name srt)
 (source (github savonet/ocaml-srt))
-(license GPL-2.0-only)
+(license GPL-2.0-or-later)
 (authors "The Savonet Team <savonet-users@lists.sourceforge.net>")
 (maintainers "The Savonet Team <savonet-users@lists.sourceforge.net>")
 
