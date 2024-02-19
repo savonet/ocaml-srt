@@ -1,3 +1,7 @@
+0.3.1 (unreleased)
+=====
+* Added missing dependency on `ocamlfind`
+
 0.3.0 (2022-03-04)
 =====
 * Added `rcvdata` and `rcvlatency`

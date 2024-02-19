@@ -1,5 +1,5 @@
 (lang dune 2.8)
-(version 0.3.0)
+(version 0.3.1)
 (name srt)
 (source (github savonet/ocaml-srt))
 (license GPL-2.0-or-later)
@@ -22,6 +22,7 @@
   (conf-pkg-config :build)
   dune
   (dune-configurator :build)
+  ocamlfind
   ctypes
   ctypes-foreign
   integers
