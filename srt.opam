@@ -16,7 +16,7 @@ bug-reports: "https://github.com/savonet/ocaml-srt/issues"
 depends: [
   "conf-srt" {build}
   "conf-pkg-config" {build}
-  "dune" {>= "2.8"}
+  "dune" {>= "3.6"}
   "dune-configurator" {build}
   "ocamlfind"
   "ctypes"
