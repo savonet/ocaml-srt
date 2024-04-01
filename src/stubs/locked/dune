@@ -1,4 +1,0 @@
-(library
- (name srt_stubs_locked)
- (public_name srt.stubs.locked)
- (libraries ctypes.stubs))

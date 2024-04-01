@@ -24,7 +24,4 @@ ocamlfind ${TOOLCHAIN} ocamlopt \
   -I ../stubs \
   -I ../stubs/.srt_stubs.objs/native/ \
   -I ../stubs/.srt_stubs.objs/byte/ \
-  -I ../stubs/locked \
-  -I ../stubs/locked/.srt_stubs_locked.objs/native/ \
-  -I ../stubs/locked/.srt_stubs_locked.objs/byte/ \
   $@ ${ML} -o ${OUTPUT}
