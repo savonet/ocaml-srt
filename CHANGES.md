@@ -1,7 +1,6 @@
 0.3.1 (unreleased)
 =====
 * Added missing dependency on `ocamlfind`
-* Remove `locked`/`unlocked` mode.
 
 0.3.0 (2022-03-04)
 =====

@@ -5,7 +5,6 @@ type socket = int
 
 let const_string = typedef (ptr char) "const char*"
 let const_sockaddr = typedef (ptr sockaddr_t) "const struct sockaddr*"
-let signed_ocaml_bytes = typedef ocaml_bytes "char*"
 
 module ListenCallback =
   (val Foreign.dynamic_funptr ~thread_registration:true ~runtime_lock:true
@@ -49,12 +48,10 @@ module Def (F : Cstubs.FOREIGN) = struct
      @-> returning int)
 
   let send = foreign "srt_send" (int @-> string @-> int @-> returning int)
-
-  let recv =
-    foreign "srt_recv" (int @-> signed_ocaml_bytes @-> int @-> returning int)
+  let recv = foreign "srt_recv" (int @-> ptr char @-> int @-> returning int)
 
   let recvmsg =
-    foreign "srt_recvmsg" (int @-> signed_ocaml_bytes @-> int @-> returning int)
+    foreign "srt_recvmsg" (int @-> ptr char @-> int @-> returning int)
 
   let sendmsg =
     foreign "srt_sendmsg"
@@ -63,10 +60,6 @@ module Def (F : Cstubs.FOREIGN) = struct
   let setsockflag =
     foreign "srt_setsockflag"
       (int @-> socket_opt @-> ptr void @-> int @-> returning int)
-
-  let setsockflag_str =
-    foreign "srt_setsockflag"
-      (int @-> socket_opt @-> ocaml_string @-> int @-> returning int)
 
   let getsockflag =
     foreign "srt_getsockflag"

@@ -2,6 +2,8 @@ open Ctypes
 open Posix_socket
 module Srt = Srt_stubs.Def (Srt_generated_stubs)
 open Srt
+module Srt_locked = Srt_stubs_locked.Def (Srt_generated_stubs_locked)
+open Srt_locked
 open Unsigned
 
 exception Invalid_argument of string
@@ -208,8 +210,15 @@ let send sock msg =
 let sendmsg sock msg b v =
   check_err (sendmsg sock (Bytes.unsafe_to_string msg) (Bytes.length msg) b v)
 
-let recv sock buf len = check_err (recv sock (ocaml_bytes_start buf) len)
-let recvmsg sock buf len = check_err (recvmsg sock (ocaml_bytes_start buf) len)
+let mk_recv fn sock buf len =
+  if Bytes.length buf < len then raise (Invalid_argument "buffer too short!");
+  let ptr = allocate_n char ~count:len in
+  let length = check_err (fn sock ptr len) in
+  memcpy (ocaml_bytes_start buf) ptr length;
+  length
+
+let recv = mk_recv recv
+let recvmsg = mk_recv recvmsg
 
 let getsockflag : type a b. socket -> (a, b) socket_opt -> b =
  fun sock opt ->
@@ -250,15 +259,18 @@ let getsockflag : type a b. socket -> (a, b) socket_opt -> b =
 let setsockflag : type a b. socket -> (a, b) socket_opt -> b -> unit =
  fun sock opt v ->
   let f t v = to_voidp (allocate t v) in
-  let setsockflag value len sock opt = setsockflag sock opt value len in
-  let setsockflag_str value len sock opt = setsockflag_str sock opt value len in
   let of_bool v =
     let v = if v then 1 else 0 in
-    setsockflag (f int v) (sizeof int)
+    (f int v, sizeof int)
   in
-  let of_int v = setsockflag (f int v) (sizeof int) in
-  let of_string v = setsockflag_str (ocaml_string_start v) (String.length v) in
-  let setsockflag =
+  let of_int v = (f int v, sizeof int) in
+  let of_string v =
+    let len = String.length v in
+    let ptr = allocate_n char ~count:len in
+    memcpy_str ptr (ocaml_string_start v) len;
+    (to_voidp ptr, len)
+  in
+  let arg, arglen =
     match opt with
       | Enforced_encryption -> of_bool v
       | Rcvsyn -> of_bool v
@@ -278,11 +290,12 @@ let setsockflag : type a b. socket -> (a, b) socket_opt -> b -> unit =
       | Rcvlatency -> of_int v
       | Transtype ->
           let transtype = int_of_transtype v in
-          setsockflag (f int transtype) (sizeof int)
+          (f int transtype, sizeof int)
       | Passphrase -> of_string v
       | Streamid -> of_string v
   in
-  ignore (check_err (setsockflag sock (srt_socket_opt_of_socket_opt opt)))
+  ignore
+    (check_err (setsockflag sock (srt_socket_opt_of_socket_opt opt) arg arglen))
 
 let close s =
   ignore (check_err (close s));

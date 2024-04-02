@@ -8,7 +8,6 @@ let c_headers =
 #include <pthread.h>
 #include <srt/srt.h>
 #include <stdio.h>
-#include <string.h>
 
 #define MAX_LOG_STRING 1024
 
@@ -99,19 +98,28 @@ CAMLprim value ocaml_srt_clear_log_callback() {
 }
 |}
 
+let locked_c_headers = {|
+#include <string.h>
+|}
+
 let () =
   let mode = Sys.argv.(1) in
   let fname = Sys.argv.(2) in
+  let locked = Array.length Sys.argv > 3 in
   let oc = open_out_bin fname in
   let format = Format.formatter_of_out_channel oc in
   let fn =
     match mode with
       | "ml" -> Cstubs.write_ml
       | "c" ->
-          Format.fprintf format "%s@\n" c_headers;
+          if locked then Format.fprintf format "%s@\n" locked_c_headers
+          else Format.fprintf format "%s@\n" c_headers;
           Cstubs.write_c
       | _ -> assert false
   in
-  fn format ~prefix:"ocaml_srt" (module Srt_stubs.Def);
+  if locked then fn format ~prefix:"ocaml_srt" (module Srt_stubs_locked.Def)
+  else
+    fn ~concurrency:Cstubs.unlocked format ~prefix:"ocaml_srt"
+      (module Srt_stubs.Def);
   Format.pp_print_flush format ();
   close_out oc
