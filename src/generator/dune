@@ -55,23 +55,15 @@
   (run ../config/discover.exe)))
 
 (rule
- (targets ctypes_dir)
- (action
-  (with-stdout-to
-   %{targets}
-   (run dirname %{lib:ctypes:ctypes_cstubs_internals.h}))))
-
-(rule
  (targets gen_types_c_target.exe)
  (deps
   (:c_flags ./c_flags)
-  (:ctypes_dir ./ctypes_dir)
   (:c_code ./gen_types.c))
  (action
   (run
    %{ocaml-config:c_compiler}
    -I
-   %{read-lines:ctypes_dir}
+   %{lib:ctypes:}
    -I
    %{ocaml-config:standard_library}
    %{read-lines:c_flags}
@@ -110,13 +102,12 @@
  (targets gen_constants_c_target.exe)
  (deps
   (:c_flags ./c_flags)
-  (:ctypes_dir ./ctypes_dir)
   (:c_code ./gen_constants.c))
  (action
   (run
    %{ocaml-config:c_compiler}
    -I
-   %{read-lines:ctypes_dir}
+   %{lib:ctypes:}
    -I
    %{ocaml-config:standard_library}
    %{read-lines:c_flags}
