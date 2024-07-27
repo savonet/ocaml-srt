@@ -304,8 +304,6 @@ let close s =
 
 let getsockstate = getsockstate
 let create_socket = create_socket
-let cleanup = cleanup
-let startup = startup
 
 module SocketSet = Set.Make (struct
   type t = Srt.socket
@@ -460,7 +458,7 @@ module Log = struct
 
   let should_stop = Atomic.make true
 
-  let start_processing () =
+  let startup () =
     Atomic.set should_stop false;
     ignore
       (Thread.create
@@ -470,7 +468,7 @@ module Log = struct
                !log_fn msg))
          ())
 
-  let stop_processing () = Atomic.set should_stop true
+  let cleanup () = Atomic.set should_stop true
 end
 
 module Stats = struct
@@ -637,3 +635,11 @@ module Stats = struct
     ignore (check_err (bistats socket stats clear instantaneous));
     from_struct stats
 end
+
+let cleanup () =
+  cleanup ();
+  Log.cleanup ()
+
+let startup () =
+  Log.startup ();
+  startup ()

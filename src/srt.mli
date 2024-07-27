@@ -133,8 +133,6 @@ module Log : sig
 
   type level = [ `Critical | `Error | `Warning | `Notice | `Debug ]
 
-  val start_processing : unit -> unit
-  val stop_processing : unit -> unit
   val setloglevel : level -> unit
   val set_handler : (msg -> unit) -> unit
   val clear_handler : unit -> unit
