@@ -456,19 +456,28 @@ module Log = struct
     clear_callback ();
     mutexify (fun () -> log_fn := fun _ -> ()) ()
 
-  let should_stop = Atomic.make true
+  let processor_state = Atomic.make `Idle
 
-  let startup () =
-    Atomic.set should_stop false;
+  let start_thread () =
     ignore
       (Thread.create
          (fun () ->
            process_log (fun msg ->
-               if Atomic.get should_stop then raise Thread.Exit;
-               !log_fn msg))
+               if Atomic.compare_and_set processor_state `Stopping `Idle then ()
+               else !log_fn msg))
          ())
 
-  let cleanup () = Atomic.set should_stop true
+  let rec startup () =
+    if Atomic.get processor_state = `Running then ()
+    else if Atomic.compare_and_set processor_state `Idle `Running then
+      start_thread ()
+    else if Atomic.compare_and_set processor_state `Stopping `Running then ()
+    else startup ()
+
+  let rec cleanup () =
+    if List.mem (Atomic.get processor_state) [`Idle; `Stopping] then ()
+    else if Atomic.compare_and_set processor_state `Running `Stopping then ()
+    else cleanup ()
 end
 
 module Stats = struct
