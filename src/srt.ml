@@ -458,8 +458,19 @@ module Log = struct
     clear_callback ();
     mutexify (fun () -> log_fn := fun _ -> ()) ()
 
-  let () =
-    ignore (Thread.create (fun () -> process_log (fun msg -> !log_fn msg)) ())
+  let should_stop = Atomic.make true
+
+  let start_processing () =
+    Atomic.set should_stop false;
+    ignore
+      (Thread.create
+         (fun () ->
+           process_log (fun msg ->
+               if Atomic.get should_stop then raise Thread.Exit;
+               !log_fn msg))
+         ())
+
+  let stop_processing () = Atomic.set should_stop true
 end
 
 module Stats = struct
