@@ -1,4 +1,4 @@
-0.3.1 (unreleased)
+0.3.1 (2024-10-29)
 =====
 * Added missing dependency on `ocamlfind`
 * Start/stop log processing on `startup`/`cleanup`.
