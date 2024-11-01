@@ -16,11 +16,12 @@ bug-reports: "https://github.com/savonet/ocaml-srt/issues"
 depends: [
   "conf-srt" {build}
   "conf-pkg-config" {build}
+  "ocaml" {>= "4.12"}
   "dune" {>= "3.6"}
   "dune-configurator" {build}
   "ocamlfind"
-  "ctypes"
-  "ctypes-foreign"
+  "ctypes" {>= "0.21.1"}
+  "ctypes-foreign" {>= "0.21.1"}
   "integers"
   "posix-socket"
   "odoc" {with-doc}

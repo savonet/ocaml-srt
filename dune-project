@@ -20,11 +20,12 @@
  (depends
   (conf-srt :build)
   (conf-pkg-config :build)
+  (ocaml (>= 4.12))
   dune
   (dune-configurator :build)
   ocamlfind
-  ctypes
-  ctypes-foreign
+  (ctypes (>= 0.21.1))
+  (ctypes-foreign (>= 0.21.1))
   integers
   posix-socket)
 )
