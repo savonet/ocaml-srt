@@ -1,3 +1,8 @@
+0.3.2 (unreleased)
+=====
+* cross-compilation: use `wine` CLI when `wine64`
+  is not available.
+
 0.3.1 (2024-10-29)
 =====
 * Added missing dependency on `ocamlfind`
