@@ -110,10 +110,19 @@ val cleanup : unit -> unit
 val create_socket : unit -> socket
 val getsockstate : socket -> socket_status
 val bind : socket -> Unix.sockaddr -> unit
+val bind_posix_socket : socket -> Posix_socket.sockaddr Ctypes.ptr -> unit
 val listen_callback : socket -> listen_callback -> unit
 val listen : socket -> int -> unit
 val accept : socket -> socket * Unix.sockaddr
 val connect : socket -> Unix.sockaddr -> unit
+val connect_posix_socket : socket -> Posix_socket.sockaddr Ctypes.ptr -> unit
+
+val rendez_vous_posix_socket :
+  socket ->
+  Posix_socket.sockaddr Ctypes.ptr ->
+  Posix_socket.sockaddr Ctypes.ptr ->
+  unit
+
 val rendez_vous : socket -> Unix.sockaddr -> Unix.sockaddr -> unit
 val send : socket -> bytes -> int
 val recv : socket -> bytes -> int -> int

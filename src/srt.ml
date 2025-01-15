@@ -160,16 +160,22 @@ let transtype_of_int = function
 
 open Ctypes
 
-let apply_sockaddr fn sockaddr =
-  let sockaddr = from_unix_sockaddr sockaddr in
-  let len = sizeof sockaddr_in_t in
-  fn sockaddr len
+let apply_sockaddr fn sockaddr = fn sockaddr (sockaddr_len sockaddr)
 
-let bind socket socketaddr =
+let bind_posix_socket socket socketaddr =
   ignore (check_err (apply_sockaddr (bind socket) socketaddr))
 
-let connect socket socketaddr =
+let bind socket socketaddr =
+  ignore
+    (check_err (apply_sockaddr (bind socket) (from_unix_sockaddr socketaddr)))
+
+let connect_posix_socket socket socketaddr =
   ignore (check_err (apply_sockaddr (connect socket) socketaddr))
+
+let connect socket socketaddr =
+  ignore
+    (check_err
+       (apply_sockaddr (connect socket) (from_unix_sockaddr socketaddr)))
 
 let accept socket =
   let sockaddr = allocate_n sockaddr_t ~count:(sizeof sockaddr_storage_t) in
@@ -177,12 +183,19 @@ let accept socket =
   let socket = check_err (accept socket sockaddr socklen) in
   (socket, to_unix_sockaddr sockaddr)
 
-let rendez_vous socket sockaddr1 sockaddr2 =
+let rendez_vous_posix_socket socket sockaddr1 sockaddr2 =
   ignore
     (check_err
        (apply_sockaddr
           (apply_sockaddr (rendez_vous socket) sockaddr1)
           sockaddr2))
+
+let rendez_vous socket sockaddr1 sockaddr2 =
+  ignore
+    (check_err
+       (apply_sockaddr
+          (apply_sockaddr (rendez_vous socket) (from_unix_sockaddr sockaddr1))
+          (from_unix_sockaddr sockaddr2)))
 
 type listen_callback = socket -> int -> Unix.sockaddr -> string option -> bool
 
