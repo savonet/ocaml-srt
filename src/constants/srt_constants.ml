@@ -31,7 +31,8 @@ module Def (S : Cstubs.Types.TYPE) = struct
     | `Enforced_encryption
     | `Pbkeylen
     | `Passphrase
-    | `Streamid ]
+    | `Streamid
+    | `Ipv6only ]
 
   type transtype = [ `Live | `File | `Invalid ]
   type poll_flag = [ `Read | `Write | `Error ]
@@ -117,6 +118,7 @@ module Def (S : Cstubs.Types.TYPE) = struct
         (`Passphrase, constant "SRTO_PASSPHRASE" int64_t);
         (`Pbkeylen, constant "SRTO_PBKEYLEN" int64_t);
         (`Streamid, constant "SRTO_STREAMID" int64_t);
+        (`Ipv6only, constant "SRTO_IPV6ONLY" int64_t);
       ]
 
   let srtt_live = constant "SRTT_LIVE" int64_t

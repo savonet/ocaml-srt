@@ -2,6 +2,7 @@
 =====
 * cross-compilation: use `wine` CLI when `wine64`
   is not available.
+* Add support for `ipv6only` socket option.
 
 0.3.1 (2024-10-29)
 =====
