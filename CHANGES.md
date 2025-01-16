@@ -1,4 +1,4 @@
-0.3.2 (unreleased)
+0.3.2 (2025-01-16)
 =====
 * cross-compilation: use `wine` CLI when `wine64`
   is not available.
