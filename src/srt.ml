@@ -97,6 +97,8 @@ type (_, _) socket_opt =
   | Passphrase : ([ `Write ], string) socket_opt
   | Pbkeylen : ([ `Read | `Write ], int) socket_opt
   | Ipv6only : ([ `Read | `Write ], bool) socket_opt
+  | Latency : ([ `Read | `Write ], int) socket_opt
+  | Peerlatency : ([ `Read | `Write ], int) socket_opt
 
 let messageapi = Messageapi
 let payloadsize = Payloadsize
@@ -118,6 +120,8 @@ let passphrase = Passphrase
 let pbkeylen = Pbkeylen
 let streamid = Streamid
 let ipv6only = Ipv6only
+let latency = Latency
+let peerlatency = Peerlatency
 
 let srt_socket_opt_of_socket_opt (type a b) :
     (a, b) socket_opt -> Srt.socket_opt = function
@@ -141,6 +145,8 @@ let srt_socket_opt_of_socket_opt (type a b) :
   | Passphrase -> `Passphrase
   | Streamid -> `Streamid
   | Ipv6only -> `Ipv6only
+  | Latency -> `Latency
+  | Peerlatency -> `Peerlatency
 
 let srtt_live = Int64.to_int srtt_live
 let srtt_file = Int64.to_int srtt_file
@@ -272,6 +278,8 @@ let getsockflag : type a b. socket -> (a, b) socket_opt -> b =
     | Passphrase -> to_string ()
     | Streamid -> to_string ()
     | Ipv6only -> to_bool ()
+    | Latency -> to_int ()
+    | Peerlatency -> to_int ()
 
 let setsockflag : type a b. socket -> (a, b) socket_opt -> b -> unit =
  fun sock opt v ->
@@ -311,6 +319,8 @@ let setsockflag : type a b. socket -> (a, b) socket_opt -> b -> unit =
       | Passphrase -> of_string v
       | Streamid -> of_string v
       | Ipv6only -> of_bool v
+      | Latency -> of_int v
+      | Peerlatency -> of_int v
   in
   ignore
     (check_err (setsockflag sock (srt_socket_opt_of_socket_opt opt) arg arglen))

@@ -1,3 +1,7 @@
+0.3.3 (unreleased)
+=====
+* Add support for `SRTO_LATENCY` and `SRTO_PEERLATENCY`
+
 0.3.2 (2025-01-16)
 =====
 * cross-compilation: use `wine` CLI when `wine64`

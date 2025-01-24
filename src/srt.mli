@@ -59,6 +59,8 @@ val streamid : ([ `Read | `Write ], string) socket_opt
 val passphrase : ([ `Write ], string) socket_opt
 val pbkeylen : ([ `Read | `Write ], int) socket_opt
 val ipv6only : ([ `Read | `Write ], bool) socket_opt
+val latency : ([ `Read | `Write ], int) socket_opt
+val peerlatency : ([ `Read | `Write ], int) socket_opt
 
 type errno =
   [ `Easyncfail
