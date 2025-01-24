@@ -14,6 +14,8 @@ type transtype = Srt.transtype
 type socket_status = Srt.socket_status
 type socket = Srt.socket
 
+let socket_id s = s
+
 let resources = Hashtbl.create 0
 
 let string_of_errno = function

@@ -116,6 +116,7 @@ exception Error of errno * string
 val startup : unit -> unit
 val cleanup : unit -> unit
 val create_socket : unit -> socket
+val socket_id : socket -> int
 val getsockstate : socket -> socket_status
 val bind : socket -> Unix.sockaddr -> unit
 val bind_posix_socket : socket -> Posix_socket.sockaddr Ctypes.ptr -> unit
