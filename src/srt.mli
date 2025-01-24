@@ -39,12 +39,21 @@ type transtype = [ `Live | `File | `Invalid ]
 type ('a, 'b) socket_opt
 type listen_callback = socket -> int -> Unix.sockaddr -> string option -> bool
 
+(** Write only options. *)
 val messageapi : ([ `Write ], bool) socket_opt
 val payloadsize : ([ `Write ], int) socket_opt
 val transtype : ([ `Write ], transtype) socket_opt
-val rcvsyn : ([ `Read | `Write ], bool) socket_opt
-val sndsyn : ([ `Read | `Write ], bool) socket_opt
 val conntimeo : ([ `Write ], int) socket_opt
+val passphrase : ([ `Write ], string) socket_opt
+val enforced_encryption : ([ `Write ], bool) socket_opt
+
+(** Read only options. *)
+val rcvdata : ([ `Read ], int) socket_opt
+
+(** Read/write options. *)
+val rcvsyn : ([ `Read | `Write ], bool) socket_opt
+
+val sndsyn : ([ `Read | `Write ], bool) socket_opt
 val rcvtimeo : ([ `Read | `Write ], int) socket_opt
 val sndtimeo : ([ `Read | `Write ], int) socket_opt
 val reuseaddr : ([ `Read | `Write ], bool) socket_opt
@@ -52,11 +61,8 @@ val rcvbuf : ([ `Read | `Write ], int) socket_opt
 val sndbuf : ([ `Read | `Write ], int) socket_opt
 val udp_rcvbuf : ([ `Read | `Write ], int) socket_opt
 val udp_sndbuf : ([ `Read | `Write ], int) socket_opt
-val rcvdata : ([ `Read ], int) socket_opt
 val rcvlatency : ([ `Read | `Write ], int) socket_opt
-val enforced_encryption : ([ `Write ], bool) socket_opt
 val streamid : ([ `Read | `Write ], string) socket_opt
-val passphrase : ([ `Write ], string) socket_opt
 val pbkeylen : ([ `Read | `Write ], int) socket_opt
 val ipv6only : ([ `Read | `Write ], bool) socket_opt
 val latency : ([ `Read | `Write ], int) socket_opt
