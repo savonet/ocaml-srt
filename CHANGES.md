@@ -1,4 +1,4 @@
-0.3.3 (unreleased)
+0.3.3 (2025-01-30)
 =====
 * Add support for `SRTO_LATENCY` and `SRTO_PEERLATENCY`
 
