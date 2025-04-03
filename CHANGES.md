@@ -1,3 +1,7 @@
+0.3.4 (unreleased)
+====
+* Copy send message before releasing the global lock.
+
 0.3.3 (2025-01-30)
 =====
 * Add support for `SRTO_LATENCY` and `SRTO_PEERLATENCY`

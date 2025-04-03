@@ -41,6 +41,7 @@ type listen_callback = socket -> int -> Unix.sockaddr -> string option -> bool
 
 (** Write only options. *)
 val messageapi : ([ `Write ], bool) socket_opt
+
 val payloadsize : ([ `Write ], int) socket_opt
 val transtype : ([ `Write ], transtype) socket_opt
 val conntimeo : ([ `Write ], int) socket_opt

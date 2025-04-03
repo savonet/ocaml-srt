@@ -15,7 +15,6 @@ type socket_status = Srt.socket_status
 type socket = Srt.socket
 
 let socket_id s = s
-
 let resources = Hashtbl.create 0
 
 let string_of_errno = function
@@ -229,10 +228,16 @@ let listen_callback sock fn =
 let listen sock backlog = ignore (check_err (listen sock backlog))
 
 let send sock msg =
-  check_err (send sock (Bytes.unsafe_to_string msg) (Bytes.length msg))
+  let len = Bytes.length msg in
+  let ptr = allocate_n char ~count:len in
+  memcpy_str ptr (ocaml_string_start (Bytes.unsafe_to_string msg)) len;
+  check_err (send sock ptr len)
 
 let sendmsg sock msg b v =
-  check_err (sendmsg sock (Bytes.unsafe_to_string msg) (Bytes.length msg) b v)
+  let len = Bytes.length msg in
+  let ptr = allocate_n char ~count:len in
+  memcpy_str ptr (ocaml_string_start (Bytes.unsafe_to_string msg)) len;
+  check_err (sendmsg sock ptr len b v)
 
 let mk_recv fn sock buf len =
   if Bytes.length buf < len then raise (Invalid_argument "buffer too short!");
@@ -458,7 +463,7 @@ module Log = struct
   let setloglevel lvl = setloglevel (int_of_level lvl)
 
   external setup_log_callback : unit -> unit = "ocaml_srt_setup_log_callback"
-    [@@noalloc]
+  [@@noalloc]
 
   external process_log : (msg -> unit) -> unit = "ocaml_srt_process_log"
 
@@ -480,7 +485,7 @@ module Log = struct
     mutexify (fun () -> log_fn := fn) ()
 
   external clear_callback : unit -> unit = "ocaml_srt_clear_log_callback"
-    [@@noalloc]
+  [@@noalloc]
 
   let clear_handler () =
     clear_callback ();
