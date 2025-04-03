@@ -3,12 +3,13 @@ open Posix_socket
 
 type socket = int
 
-let const_string = typedef (ptr char) "const char*"
+let const_char_ptr = typedef (ptr char) "const char*"
+let const_string = typedef string "const char*"
 let const_sockaddr = typedef (ptr sockaddr_t) "const struct sockaddr*"
 
 module ListenCallback =
   (val Foreign.dynamic_funptr ~thread_registration:true ~runtime_lock:true
-         (ptr void @-> int @-> int @-> const_sockaddr @-> const_string
+         (ptr void @-> int @-> int @-> const_sockaddr @-> const_char_ptr
         @-> returning int))
 
 module Def (F : Cstubs.FOREIGN) = struct
