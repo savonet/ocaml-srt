@@ -1,6 +1,9 @@
 0.3.4 (unreleased)
 ====
 * Copy send message before releasing the global lock.
+* Use fixed posix socket API for allocating socket address
+  storage.
+* Added `accept_no_origin`.
 
 0.3.3 (2025-01-30)
 =====
