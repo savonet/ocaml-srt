@@ -124,6 +124,7 @@ val bind_posix_socket : socket -> Posix_socket.sockaddr Ctypes.ptr -> unit
 val listen_callback : socket -> listen_callback -> unit
 val listen : socket -> int -> unit
 val accept : socket -> socket * Unix.sockaddr
+val accept_no_origin : socket -> socket
 val connect : socket -> Unix.sockaddr -> unit
 val connect_posix_socket : socket -> Posix_socket.sockaddr Ctypes.ptr -> unit
 
