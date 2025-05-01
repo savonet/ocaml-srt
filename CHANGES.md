@@ -1,4 +1,4 @@
-0.3.4 (unreleased)
+0.3.4 (2025-05-01)
 ====
 * Copy send message before releasing the global lock.
 * Use fixed posix socket API for allocating socket address
