@@ -184,9 +184,14 @@ let connect socket socketaddr =
     (check_err
        (apply_sockaddr (connect socket) (from_unix_sockaddr socketaddr)))
 
+let accept_no_origin socket =
+  let sockaddr = from_voidp Sockaddr.t null in
+  let socklen = allocate int 0 in
+  check_err (accept socket sockaddr socklen)
+
 let accept socket =
-  let sockaddr = allocate_n sockaddr_t ~count:(sizeof sockaddr_storage_t) in
-  let socklen = allocate int (sizeof sockaddr_t) in
+  let sockaddr = Sockaddr.from_sockaddr_storage (sockaddr_storage ()) in
+  let socklen = allocate int sockaddr_storage_len in
   let socket = check_err (accept socket sockaddr socklen) in
   (socket, to_unix_sockaddr sockaddr)
 

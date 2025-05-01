@@ -27,5 +27,5 @@
   (ctypes (>= 0.21.1))
   (ctypes-foreign (>= 0.21.1))
   integers
-  (posix-socket (>= 2.1.0)))
+  (posix-socket (>= 3.0.0)))
 )
