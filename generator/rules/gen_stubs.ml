@@ -46,7 +46,7 @@ CAMLprim value ocaml_srt_process_log(value cb) {
       payload = caml_alloc_tuple(5);
       Store_field(payload, 0, Val_int(log_msg->level));
       Store_field(payload, 1, caml_alloc_initialized_string(strnlen(log_msg->file, MAX_LOG_STRING), log_msg->file));
-      Store_field(payload, 2, Val_int(log_msg->line)); 
+      Store_field(payload, 2, Val_int(log_msg->line));
       Store_field(payload, 3, caml_alloc_initialized_string(strnlen(log_msg->area, MAX_LOG_STRING), log_msg->area));
       Store_field(payload, 4, caml_alloc_initialized_string(strnlen(log_msg->message, MAX_LOG_STRING), log_msg->message));
 
@@ -88,7 +88,7 @@ void ocaml_srt_log_handler(void *opaque, int level, const char *file, int line,
 }
 
 CAMLprim value ocaml_srt_setup_log_callback(value unit) {
-  srt_setloghandler(NULL, &ocaml_srt_log_handler); 
+  srt_setloghandler(NULL, &ocaml_srt_log_handler);
   return Val_unit;
 }
 

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# shellcheck disable=SC2086,SC2153
+
 SYSTEM=$1
 CMD=$2
 ARG1=$3

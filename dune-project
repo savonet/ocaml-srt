@@ -1,4 +1,4 @@
-(lang dune 3.6)
+(lang dune 3.23)
 (version 0.3.4)
 (name srt)
 (source (github savonet/ocaml-srt))
@@ -17,11 +17,11 @@
               "\| as the Internet.
               "\| This package provides OCaml bindings to the C implementation library.
  )
+ (allow_empty)
  (depends
   (conf-srt :build)
   (conf-pkg-config :build)
   (ocaml (>= 4.12))
-  dune
   (dune-configurator :build)
   ocamlfind
   (ctypes (>= 0.21.1))

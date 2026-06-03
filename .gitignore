@@ -1,4 +1,7 @@
-_build/
-*.install
-.*sw*
+*~
+_build
+*.byte
+*.native
+_tests
 .merlin
+*.install

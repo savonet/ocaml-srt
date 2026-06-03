@@ -1,14 +1,8 @@
 (library
  (name srt_types)
  (public_name srt.types)
+ (enabled_if
+  (= %{read:../../detect/srt_available} true))
  (libraries posix-socket ctypes.stubs srt.constants))
 
-(rule
- (targets srt_generated_constants.ml)
- (deps
-  (:exec ../generator/exec.sh)
-  (:gen ../generator/gen_constants_c_target.exe))
- (action
-  (with-stdout-to
-   %{targets}
-   (system "%{exec} %{ocaml-config:system} %{gen}"))))
+(dynamic_include ../../gen/types.inc)

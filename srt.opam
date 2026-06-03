@@ -14,10 +14,10 @@ license: "GPL-2.0-or-later"
 homepage: "https://github.com/savonet/ocaml-srt"
 bug-reports: "https://github.com/savonet/ocaml-srt/issues"
 depends: [
+  "dune" {>= "3.23"}
   "conf-srt" {build}
   "conf-pkg-config" {build}
   "ocaml" {>= "4.12"}
-  "dune" {>= "3.6"}
   "dune-configurator" {build}
   "ocamlfind"
   "ctypes" {>= "0.21.1"}
